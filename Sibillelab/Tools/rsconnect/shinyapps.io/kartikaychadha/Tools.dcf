@@ -1,0 +1,12 @@
+name: Tools
+title: Tools
+username:
+account: kartikaychadha
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 463306
+bundleId: 1599880
+url: https://kartikaychadha.shinyapps.io/Tools/
+when: 1537645090.86884
+asMultiple: FALSE
+asStatic: FALSE
