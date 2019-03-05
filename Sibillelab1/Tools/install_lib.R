@@ -1,0 +1,8 @@
+install.packages("shinydashboard")
+install.packages("leaflet")
+install.packages("dplyr")
+install.packages("curl")
+install.packages("shiny")
+install.packages("RMySQL")
+install.packages("dichromat")
+install.packages("DT")
