@@ -1,0 +1,28 @@
+---
+layout: compress
+---
+<html lang="{{ page.lang | default: site.lang | default: "en_US" }}">
+
+  {% include head.html %}
+  {% if page.categories contains 'visualization' %}
+    <body class="visualization">
+  {% else %}
+    <body>
+  {% endif %}
+  {% include header.html %}
+  <div id="contents">
+    <div id='panels'>
+      <div id='search'>
+          <form action='#' name='search'>
+            <input id='search-field' type='text' placeholder="Search authors, cities, notes and citations." />
+          </form>
+          <div id='search-results'>
+            <p>Begin typing above.</p>
+          </div>
+        </div>
+    </div>
+  </div>
+  {% include footer.html %}
+  {% include endjs.html %}
+  </body>
+</html>

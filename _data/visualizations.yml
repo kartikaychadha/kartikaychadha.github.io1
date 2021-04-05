@@ -1,0 +1,20 @@
+- name: "Trajectories"
+  description: "Something about the trajectories visualization. Lorem ipsum dolor sit amet nonummy elit."
+  id: "trajectories"
+  url: "/trajectories"
+  visclass: "Trajectories"
+  datamode: 2
+
+- name: "Intersections"
+  description: "Something about the intersection visualization. Lorem ipsum dolor sit amet nonummy elit."
+  id: "intersections"
+  url: "/intersections"
+  visclass: "Intersections"
+  datamode: 1
+  
+- name: "Itineraries"
+  description: "Something about the intersection visualization. Lorem ipsum dolor sit amet nonummy elit."
+  id: "itineraries"
+  url: "/itineraries"
+  visclass: "Itineraries"
+  datamode: 3
