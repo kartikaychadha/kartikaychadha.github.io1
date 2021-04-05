@@ -9,28 +9,6 @@
   subjects:
   - name: "Mohammed Duse Ali"
 
-- name: "Roopika Risam"
-  roles: "member"
-  id: ""
-  bio:
-  email:
-  homepagetitle: 
-  homepageurl:
-  institution: "Salem State University"
-  subjects:
-  - name: "W.E.B. Dubois"
-
-- name: "Amanda Perry"
-  roles: "member"
-  id: ""
-  bio:
-  email:
-  homepagetitle: 
-  homepageurl:
-  institution: "Champlain College"
-  subjects:
-  - name: "George Lamming"
-
 - name: "Laurent Dubois"
   roles: "member"
   id: ""
@@ -41,18 +19,6 @@
   institution: "Duke University"
   subjects:
   - name: "Katherine Dunham"
-
-- name: "Joanna Dee Das"
-  roles: "member"
-  id: ""
-  bio:
-  email:
-  homepagetitle: 
-  homepageurl: 
-  institution: "Washington University in St. Louis"
-  subjects:
-  - name: "Katherine Dunham"
-
  
 - name: "Alex Gil"
   roles: "member"
@@ -108,17 +74,6 @@
   institution: "Williams College"
   subjects:
   - name: "Kamau Brathwaite"
-
-- name: "Soraya Limare"
-  roles: "member"
-  id: ""
-  bio:
-  email:
-  homepagetitle: 
-  homepageurl:
-  institution: "Columbia University"
-  subjects:
-  - name: "Maryse Condé"
 
 - name: "Kora Véron Leblé"
   roles: "member"
@@ -184,48 +139,4 @@
   homepageurl: "http://www.agilehumanities.ca"
   institution: "Visualization, UI/UX and Production Design, System Design"
   subjects:
-  - name:
-
-- name: "The Schomburg Center for Research in Black Culture"
-  roles: "member"
-  id: ""
-  bio:
-  email:
-  homepagetitle: ""
-  homepageurl: "https://www.nypl.org/locations/schomburg"
-  institution: ""
-  subjects:
-  - name:
-
-- name: "The University of Virginia"
-  roles: "member"
-  id: ""
-  bio:
-  email:
-  homepagetitle: ""
-  homepageurl: "https://www.nypl.org/locations/schomburg"
-  institution: ""
-  subjects:
-  - name:
-
-- name: "Columbia University Graduate School of Arts and Sciences"
-  roles: "member"
-  id: ""
-  bio:
-  email:
-  homepagetitle: ""
-  homepageurl: ""
-  institution: ""
-  subjects:
-  - name:
-
-- name: "Duke University Forum for Scholars and Publics"
-  roles: "member"
-  id: ""
-  bio:
-  email:
-  homepagetitle: ""
-  homepageurl: ""
-  institution: ""
-  subjects:
-  - name:
+  - name: 

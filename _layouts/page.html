@@ -4,10 +4,9 @@ layout: compress
 <html lang="{{ page.lang | default: site.lang | default: "en_US" }}">
 
   {% include head.html %}
-
   {% if page.categories contains 'visualization' %}
     <body class="visualization">
-
+  {% else %}
     <body>
   {% endif %}
   {% include header.html %}
@@ -17,9 +16,11 @@ layout: compress
         <div id="page-title"><h1>{{page.pagetitle}}</h1></div>
       {% endif %}
       <div id='page'>
-         {% if page.id == 'credits' %}
+         {% if page.id == 'home' %}
            <div class='page-text has-sidebar'>
-            {% include members.html %}
+             {{page.content | markdownify}}
+             <h2>Credits</h2>
+             {% include members.html %}
            </div>
            {% include sidebar.html %}
          {% else %}
