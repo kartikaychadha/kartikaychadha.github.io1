@@ -1,0 +1,35 @@
+---
+layout: compress
+---
+<html lang="{{ page.lang | default: site.lang | default: "en_US" }}">
+
+  {% include head.html %}
+  {% if page.categories contains 'visualization' %}
+    <body class="visualization">
+  {% else %}
+    <body>
+  {% endif %}
+  {% include header.html %}
+  <div id="contents">
+    <div id='panels'>
+      <div id='itineraries' class='panel'>
+          <div class='authors'>
+            <div class='header'>Select an author</div>
+            <div class='authors-list'></div>
+          </div>
+          <div class='itineraries'>
+            <div class='header'>Itineraries</div>
+            <div class='selections'>
+              <div class='itinerary'>
+                <div class='itinerary-header'>Select an author</div>
+                <div class='itinerary-view'></div>
+              </div>
+            </div>
+          </div>   
+        </div>
+    </div>
+	</div>
+  {% include footer.html %}
+  {% include endjs.html %}
+  </body>
+</html>

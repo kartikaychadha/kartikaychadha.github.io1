@@ -1,0 +1,59 @@
+---
+#layout: compress
+---
+<html lang="{{ page.lang | default: site.lang | default: "en_US" }}">
+
+  {% include head.html %}
+  {% if page.categories contains 'visualization' %}
+    <body class="visualization">
+  {% else %}
+    <body>
+  {% endif %}
+  {% include header.html %}
+  <div id="contents">
+    <div id='panels'>
+      <div id='trajectories' class='panel'>
+          <div class='date-range'>
+            <div class='header'>Select Range</div>
+            <div class='date-selector'>
+              <div class='indicator'>
+                <span class='date-start'></span> – <span class='date-end'></span>
+              </div>
+              <div id="slider-date"></div>
+            </div>
+          </div> 
+          <div class='authors'>
+            <div class='header'>Select authors</div>
+            <div class="authors-list small-set">
+              {% assign count = 0 %}
+              {%- for author in site.data.author_ids -%}
+
+              {%- if count == 0 -%}
+              {%- assign count = count | plus: 1 -%}
+              <div class="arow">
+                <a data-key="{{ author[0] }}" class="author a-{{ forloop.index }}" title="{{ author[1] }}">{{ author[1] }}</a>
+                {%- elsif count == 1 -%}
+                {%- assign count = count | minus: 1 -%}
+                <a data-key="{{ author[0] }}" class="author a-{{ forloop.index }}" title="{{ author[1] }}">{{ author[1] }}</a>
+              </div>
+              {%- endif -%}              
+              {%- endfor -%}
+              
+              {%- if count == 1 -%}
+              </div>
+              {%- endif -%}
+            </div>
+
+          </div>
+          <div class='location'>
+            <div class='header'>Locations</div>
+            <!-- <div class='map'></div> -->
+            <div id="mapid"></div>
+          </div>   
+        </div>
+    </div>
+	</div>
+  {% include footer.html %}
+  {% include endjs.html %}
+  </body>
+</html>

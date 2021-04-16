@@ -1,0 +1,231 @@
+- name: "Marina Bilbija"
+  roles: "member"
+  id: ""
+  bio:
+  email:
+  homepagetitle: 
+  homepageurl:
+  institution: "Williams College"
+  subjects:
+  - name: "Mohammed Duse Ali"
+
+- name: "Roopika Risam"
+  roles: "member"
+  id: ""
+  bio:
+  email:
+  homepagetitle: 
+  homepageurl:
+  institution: "Salem State University"
+  subjects:
+  - name: "W.E.B. Dubois"
+
+- name: "Amanda Perry"
+  roles: "member"
+  id: ""
+  bio:
+  email:
+  homepagetitle: 
+  homepageurl:
+  institution: "Champlain College"
+  subjects:
+  - name: "George Lamming"
+
+- name: "Laurent Dubois"
+  roles: "member"
+  id: ""
+  bio:
+  email:
+  homepagetitle: 
+  homepageurl:
+  institution: "Duke University"
+  subjects:
+  - name: "Katherine Dunham"
+
+- name: "Joanna Dee Das"
+  roles: "member"
+  id: ""
+  bio:
+  email:
+  homepagetitle: 
+  homepageurl: 
+  institution: "Washington University in St. Louis"
+  subjects:
+  - name: "Katherine Dunham"
+
+ 
+- name: "Alex Gil"
+  roles: "member"
+  id: ""
+  bio:
+  email:
+  homepagetitle: 
+  homepageurl:
+  institution: "Columbia University"
+  subjects:
+  - name: "Aimé Césaire"
+
+- name: "Kaiama L. Glover"
+  roles: "member"
+  id: ""
+  bio:
+  email:
+  homepagetitle: 
+  homepageurl:
+  institution: "Barnard College, Columbia University"
+  subjects:
+  - name: "René Depestre"
+   
+- name: "Tao Goffe"
+  roles: "member"
+  id: ""
+  bio:
+  email:
+  homepagetitle: 
+  homepageurl:
+  institution: "New York University"
+  subjects:
+  - name: "Wifredo Lam"
+
+- name: "Kelly Baker Josephs"
+  roles: "member"
+  id: ""
+  bio:
+  email:
+  homepagetitle:
+  homepageurl:
+  institution: "York College, CUNY"
+  subjects:
+  - name: "Kamau Brathwaite"
+ 
+- name: "Clara Pomi"
+  roles: "member"
+  id: ""
+  bio:
+  email:
+  homepagetitle: 
+  homepageurl:
+  institution: "Williams College"
+  subjects:
+  - name: "Kamau Brathwaite"
+
+- name: "Soraya Limare"
+  roles: "member"
+  id: ""
+  bio:
+  email:
+  homepagetitle: 
+  homepageurl:
+  institution: "Columbia University"
+  subjects:
+  - name: "Maryse Condé"
+
+- name: "Kora Véron Leblé"
+  roles: "member"
+  id: ""
+  bio:
+  email:
+  homepagetitle: 
+  homepageurl:
+  institution: "Institut de Textes et Manuscrits, CNRS"
+  subjects:
+  - name: "Aimé Césaire"
+ 
+- name: "Buck Wanner"
+  roles: "member"
+  id: ""
+  bio:
+  email:
+  homepagetitle: 
+  homepageurl:
+  institution: "Columbia University, Visualization Design"
+  subjects:
+  - name: 
+
+- name: "Emily Fuhrman"
+  roles: "member"
+  id: ""
+  bio:
+  email:
+  homepagetitle:
+  homepageurl:
+  institution: "Columbia University, Visualization & Project Design"
+  subjects:
+  - name: 
+ 
+- name: "Alyssa Vann"
+  roles: "member"
+  id: ""
+  bio:
+  email:
+  homepagetitle: 
+  homepageurl:
+  institution: "Stanford University, Data Analyst"
+  subjects:
+  - name: "Lydia Cabrera"
+
+- name: "Dean Irvine"
+  roles: "member"
+  id: ""
+  bio:
+  email:
+  homepagetitle: "Agile Humanities Agency"
+  homepageurl: "http://www.agilehumanities.ca"
+  institution: "Project Consultant"
+  subjects:
+  - name: 
+ 
+- name: "Bill Kennedy"
+  roles: "member"
+  id: ""
+  bio:
+  email:
+  homepagetitle: "Agile Humanities Agency"
+  homepageurl: "http://www.agilehumanities.ca"
+  institution: "Visualization, UI/UX and Production Design, System Design"
+  subjects:
+  - name:
+
+- name: "The Schomburg Center for Research in Black Culture"
+  roles: "member"
+  id: ""
+  bio:
+  email:
+  homepagetitle: ""
+  homepageurl: "https://www.nypl.org/locations/schomburg"
+  institution: ""
+  subjects:
+  - name:
+
+- name: "The University of Virginia"
+  roles: "member"
+  id: ""
+  bio:
+  email:
+  homepagetitle: ""
+  homepageurl: "https://www.nypl.org/locations/schomburg"
+  institution: ""
+  subjects:
+  - name:
+
+- name: "Columbia University Graduate School of Arts and Sciences"
+  roles: "member"
+  id: ""
+  bio:
+  email:
+  homepagetitle: ""
+  homepageurl: ""
+  institution: ""
+  subjects:
+  - name:
+
+- name: "Duke University Forum for Scholars and Publics"
+  roles: "member"
+  id: ""
+  bio:
+  email:
+  homepagetitle: ""
+  homepageurl: ""
+  institution: ""
+  subjects:
+  - name:

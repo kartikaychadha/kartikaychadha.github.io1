@@ -1,0 +1,22 @@
+<!-- <script src="{{ 'assets/js/ui.min.js' | absolute_url }}"></script> -->
+
+{% if page.categories contains 'search' %}
+  <script type='text/javascript' src="{{ 'assets/js/libs/lunr.min.js' | absolute_url }}"></script>
+  <script src="{{ 'assets/js/vis.min.js' | absolute_url }}"></script> 
+  <script type="text/javascript">
+    var vis = new Search;
+    vis.init();
+  </script>
+{% endif %}
+
+<script src="{{ 'assets/js/countries.js' | absolute_url }}"></script>
+
+{% for visualization in site.data.visualizations %}
+  {% if visualization.id == page.id %}
+    <script src="{{ 'assets/js/scripts.js' | absolute_url }}"></script> 
+    <script type="text/javascript">
+        var vis = new {{ visualization.visclass }}();
+    </script>
+  {% endif %}
+{% endfor %}
+
