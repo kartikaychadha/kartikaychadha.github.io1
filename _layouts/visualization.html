@@ -1,0 +1,19 @@
+---
+bodyClass: visualization
+---
+<html lang="{{ page.lang | default: site.lang | default: 'en_US' }}">
+
+  {% include head.html %}
+  {% if page.categories contains 'visualization' %}
+    <body class="visualization">
+  {% else %}
+    <body>
+  {% endif %}
+  {% include header.html %}
+
+    {{ content }}
+
+    {% include footer.html %}
+    {% include scripts.html %}
+</body>
+</html>
