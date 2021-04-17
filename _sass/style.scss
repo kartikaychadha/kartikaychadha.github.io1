@@ -125,6 +125,7 @@ body {
   padding: 0;
   min-width: $min-width;
   position: inherit;
+	min-width: 1250px;
   
   &.visualization {
     overflow: hidden;
@@ -844,7 +845,7 @@ path.map {
   stroke-opacity: 1;
 }
 
-.point {
+.leaflet-interactive {
   fill: $clr1;
   stroke: $clr1;
   stroke-width: 1;
