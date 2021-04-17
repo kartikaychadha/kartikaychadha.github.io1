@@ -10,6 +10,7 @@
 
     safe true
     priority :high
+    VERSION = '1.0.0'
 
     # initialize config data
     def initialize(config = {})
@@ -41,7 +42,6 @@
       # generate countries
       generate_countries(site, place_files, movement_files)
 
-      generate_intersections(site, place_files, movement_files)
       ## movement_files
       # movement_files.each do |entry|
       #   # path = File.join(site.source, dir, entry)
@@ -135,105 +135,53 @@ end
 
  # generate _data/countries.json
  module CsvToJson
-  class Generator < Jekyll::Generator
-   def generate_countries(site, place_files, movement_files)
+   class Generator < Jekyll::Generator
+    def generate_countries(site, place_files, movement_files)
 
-    data = Hash.new()
-    data['type'] = "FeatureCollection"
-    data['features'] =[]
+     data = Hash.new()
+     data['type'] = "FeatureCollection"
+     data['features'] =[]
 
-    place_files.each do |entry, index|
-      path = File.join(site.source, @csv_dir, entry)
-      next if File.symlink?(path) && site.safe
-      # key = sanitize_filename(File.basename(entry, '.*')).
-      table = CSV.read(path, :headers => true)
+     place_files.each do |entry, index|
+       path = File.join(site.source, @csv_dir, entry)
+       next if File.symlink?(path) && site.safe
+       # key = sanitize_filename(File.basename(entry, '.*')).
+       table = CSV.read(path, :headers => true)
 
-      index = 0
-      table.to_a[1..-1].each do | row|
+       index = 0
+       table.to_a[1..-1].each do | row|
 
-        row.each do | col |
-          data['features'][index]= {
-            "type"=> "Feature",
-            "id"=> index +1.to_i,
-            "geometry"=> {
-              "type"=> "Point",
-              "coordinates"=> [
-                table[index]['Long'].to_f,
-                table[index]['Lat'].to_f,
-              ]
-             },
-            "properties"=> {
-              "type"=> "Sovereign country",
-              "country"=> table[index]['Country'].to_s,
-              "city"=> table[index]['City'].to_s,
-              "region"=> table[index]['Region'].to_s,
-              "placeName"=> table[index]['PlaceName'].to_s,
-              "popupContent" => "done ",
-              "underConstruction": false
-            }
-          }
-        end
-        index+=1
-      end
+         row.each do | col |
+           data['features'][index]= {
+             "type"=> "Feature",
+             "id"=> index +1.to_i,
+             "geometry"=> {
+               "type"=> "Point",
+               "coordinates"=> [
+                 table[index]['Long'].to_f,
+                 table[index]['Lat'].to_f,
+               ]
+              },
+             "properties"=> {
+               "type"=> "Sovereign country",
+               "country"=> table[index]['Country'].to_s,
+               "city"=> table[index]['City'].to_s,
+               "region"=> table[index]['Region'].to_s,
+               "placeName"=> table[index]['PlaceName'].to_s,
+               "popupContent" => "done ",
+               "underConstruction": false
+             }
+           }
+         end
+         index+=1
+       end
+     end
+
+     path = File.join(site.source, '_data', 'countries.json')
+     File.write(path, pretty_print(data.to_h.to_json))
+     puts(" csv to json file:./_data/countries.json")
+
     end
 
-    path = File.join(site.source, '_data', 'countries.json')
-    File.write(path, pretty_print(data.to_h.to_json))
-    puts(" csv to json file:./_data/countries.json")
-
    end
-
-  end
-end
-
-# generate _data/countries.json
-module CsvToJson
-  class Generator < Jekyll::Generator
-   def generate_intersections(site, place_files, movement_files)
-
-    data = Hash.new()
-    place_files.each do |entry, index|
-      path = File.join(site.source, @csv_dir, entry)
-      next if File.symlink?(path) && site.safe
-      # key = sanitize_filename(File.basename(entry, '.*')).
-      table = CSV.read(path, :headers => true)
-
-      table.to_a[1..-1].each do | row|
-
-        row.each do | col |
-          data["1866-01"] = {
-            "alexandria_egypt": [
-            {
-              "AuthorID": "smohamedali",
-              "EndCitation": "\"The Hull Lady\" 1902",
-              "EndDate": "1876",
-              "EndType": "departure",
-              "EntryIndex": 0,
-              "Likelihood": 3,
-              "Notes": "Duse Mohamed Ali (sometimes also referred to as Duse Mohamad Ali, or alternately Duse Mohamed) was born in Alexandria but spent most of his life outside of his native Egypt.",
-              "PlaceID": "alexandria_egypt",
-              "StartCitation": "Duffield 6",
-              "StartDate": "1866",
-              "StartType": "arrival"
-            }
-          ]
-        }
-          
-      end
-    end
-  end
-
-    path = File.join(site.source, '_data', 'intersections.json')
-    File.write(path, pretty_print(data.to_h.to_json))
-    puts(" csv to json file:./_data/intersections.json")
-
-   end
-
-  end
-end
-
-
- # frozen_string_literal: true
- module CsvToJson
-   VERSION = '1.0.0'
  end
