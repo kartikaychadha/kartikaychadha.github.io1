@@ -30,8 +30,10 @@ module CsvToJson
                     end
 
                     # set new index 
-                    if data.key?(data_index) == false
-                        data_index_number = 1
+                    if data.has_key?(data_index)
+                        data_index_number += 1
+                    else
+                        data_index_number = 0
                         data[data_index] = {}
                         data[data_index][city_country] = []
                     end
@@ -64,7 +66,7 @@ module CsvToJson
 
             
             end
-            save(site, 'intersections', pretty_print(data.to_h.to_json))
+           # save(site, 'intersections', pretty_print(data.to_h.to_json))
         end 
     end
 end

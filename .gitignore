@@ -12,5 +12,11 @@ node_modules
 Gemfile.lock
 package-lock.json
 
-#
+# export csv to json
+_data/author.json
+_data/continents.json
+_data/countries.json
 _data/intersections.json
+_data/itineraries.json
+_data/places.json
+
