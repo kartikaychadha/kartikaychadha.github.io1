@@ -1,6 +1,4 @@
-
-
- module CsvToJson
+module CsvToJson
   require 'csv'
   require 'json'
   require 'yaml'
@@ -37,9 +35,11 @@
       place_files.delete_if { |e| File.directory?(File.join(base, e)) }
 
       # generate author
-      generate_author(site, movement_files)
+      #generate_author(site, movement_files)
       # generate countries
-      generate_countries(site, place_files, movement_files)
+      #generate_countries(site, place_files, movement_files)
+      # generate countries
+      generate_intersections(site, movement_files)
 
       ## movement_files
       # movement_files.each do |entry|
@@ -75,19 +75,19 @@
       @done = true
     end
 
-    
-    def pretty_print(json)
-      obj = JSON.parse(json)
-      JSON.pretty_unparse(obj)
+    def getDate (date)
+      date = date.to_s
+      if date.size == 6 || date.size == 7
+          date= "#{date}-01"
+      elsif date.size == 4
+          date= "#{date}-01-01"
+      end
+      
+      begin
+          Date.parse(date)
+          rescue ArgumentError
+          return Date.new(1950,1,1)
+      end
     end
-
-    
-    def save(site, filename, json)
-      #save as json
-      path = File.join(site.source, '_data', "#{filename}.json")
-      File.write(path, json)
-      puts(" export csv to _data/#{filename}.json")
-    end
-
   end
 end

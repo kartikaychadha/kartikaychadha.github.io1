@@ -121,56 +121,37 @@ function Intersection_map(){
     var map = L.map('mapid').setView([8.75,42.19], 3);
 
 	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-		maxZoom: 25,
+		maxZoom: 3,
 		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
 			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
 		id: 'mapbox/light-v9',
 		tileSize: 512,
-		zoomOffset: -1
+		zoomOffset: -1,
+        mixZoom: 3,
 	}).addTo(map);
 
 
     L.geoJSON([{{ site.data.countries | jsonify }}], {
 
-		// style: function (feature) {
-		// 	return feature.properties && feature.properties.style;
-		// },
+		onEachFeature: onEachFeature,
 
-		//onEachFeature: onEachFeature,
-
-		pointToLayer: function (feature, latlng) {
+        pointToLayer: function (feature, latlng) {
 			return L.circleMarker(latlng, {
 				radius: 8,
-				fillColor: "#fcb040",
-				color: "#fcb040",
 				weight: 1,
 				opacity: 1,
-				fillOpacity: 0.8,
-                className: "point"
+				fillOpacity: 0.8
 			});
 		}
+
 	}).addTo(map);
 
-	L.circle([51.508, -0.11], 200000, {
-		color: 'red',
-		fillColor: '#f03',
-		fillOpacity: 0.5
-	}).addTo(map).bindPopup("I am a circle.");
 
 	function onEachFeature(feature, layer) {
         
+        var latlng = layer._latlng;
 
-        // alert("ok")
-		var popupContent = "<p>I started out as a GeoJSON " +
-				feature.geometry.type + ", but now I'm a Leaflet vector!</p>";
-
-		if (feature.properties && feature.properties.popupContent) {
-
-            // alert("ok boos")
-			popupContent += feature.properties.popupContent;
-		}
-
-		layer.bindPopup(popupContent);
+        
 	}
 
     map.on('click', function(e){
@@ -181,6 +162,77 @@ function Intersection_map(){
     });
     
 }
+
+
+
+// function Intersection_map2(){
+
+//     var map = L.map('mapid').setView([8.75,42.19], 3);
+
+// 	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+// 		maxZoom: 25,
+// 		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+// 			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+// 		id: 'mapbox/light-v9',
+// 		tileSize: 512,
+// 		zoomOffset: -1
+// 	}).addTo(map);
+
+
+//     L.geoJSON([{{ site.data.countries | jsonify }}], {
+
+// 		// style: function (feature) {
+// 		// 	return feature.properties && feature.properties.style;
+// 		// },
+
+// 		//onEachFeature: onEachFeature,
+
+// 		pointToLayer: function (feature, latlng) {
+// 			return L.circleMarker(latlng, {
+// 				radius: 8,
+// 				fillColor: "#fcb040",
+// 				color: "#fcb040",
+// 				weight: 1,
+// 				opacity: 1,
+// 				fillOpacity: 0.8,
+//                 className: "point"
+// 			});
+// 		}
+// 	}).addTo(map);
+
+// 	L.circle([51.508, -0.11], 200000, {
+// 		color: 'red',
+// 		fillColor: '#f03',
+// 		fillOpacity: 0.5
+// 	}).addTo(map).bindPopup("I am a circle.");
+
+// 	function onEachFeature(feature, layer) {
+        
+
+//         // alert("ok")
+// 		var popupContent = "<p>I started out as a GeoJSON " +
+// 				feature.geometry.type + ", but now I'm a Leaflet vector!</p>";
+
+// 		if (feature.properties && feature.properties.popupContent) {
+
+//             // alert("ok boos")
+// 			popupContent += feature.properties.popupContent;
+// 		}
+
+// 		layer.bindPopup(popupContent);
+// 	}
+
+//     map.on('click', function(e){
+//         var coord = e.latlng;
+//         var lat = coord.lat;
+//         var lng = coord.lng;
+//         console.log("You clicked the map at latitude: " + lat + " and longitude: " + lng);
+//     });
+    
+// }
+
+
+
 
 class Intersections{
     constructor() { 
