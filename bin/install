@@ -1,0 +1,8 @@
+#!/bin/sh
+
+set -e
+
+gem install jekyll
+gem install bundler
+bundle install
+npm i
