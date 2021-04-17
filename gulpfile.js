@@ -81,7 +81,9 @@ function watch() {
     '_posts/*',
     // '_data/*',
     '_csv/*',
-    '_includes/*'
+    '_includes/*',
+    '_plugins/*.rb',
+    '_plugins/*/*.rb',
   ],
   gulp.series(jekyllBuild, browserSyncReload));
 }
