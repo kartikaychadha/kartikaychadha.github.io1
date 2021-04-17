@@ -10,6 +10,7 @@
 
 {% for visualization in site.data.visualizations %}
   {% if visualization.id == page.id %}
+    <script src="{{ 'assets/js/data.js' | relative_url }}"></script> 
     <script src="{{ 'assets/js/scripts.js' | relative_url }}"></script> 
     <script type="text/javascript">
       var vis = new {{ visualization.visclass }}();

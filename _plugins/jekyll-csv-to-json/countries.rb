@@ -15,6 +15,11 @@ module CsvToJson
         index = 0
         table.to_a[1..-1].each do | row|
           row.each do | col |
+
+            city = table[index]['City'].to_s
+
+            country = table[index]['Country'].to_s
+
             data['features'][index]= {
               "type"=> "Feature",
               "id"=> index +1.to_i,
@@ -27,8 +32,12 @@ module CsvToJson
               },
               "properties"=> {
                 "type"=> "Sovereign country",
-                "country"=> table[index]['Country'].to_s,
-                "city"=> table[index]['City'].to_s,
+                "country"=> country,
+                "country_downcase"=> country.downcase,
+                "city"=> city,
+                "city_downcase"=> city.downcase,
+                "city_country" => "#{city}_#{country}".downcase,
+                
                 "region"=> table[index]['Region'].to_s,
                 "placeName"=> table[index]['PlaceName'].to_s,
                 "popupContent" => "done ",
