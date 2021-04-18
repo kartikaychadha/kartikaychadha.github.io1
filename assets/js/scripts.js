@@ -188,7 +188,7 @@ class Intersections{
                 }
 
                 if(timestamp(start_date) <= timestamp(date)
-                    || timestamp(end_date)  > checkEndTime){
+                    || timestamp(end_date)  > checkEndTime || checkEndTime == 0 ){
 
                     for (let j in mapDataTeamp) {
 
