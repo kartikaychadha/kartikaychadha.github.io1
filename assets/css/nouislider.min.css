@@ -100,6 +100,7 @@
  .noUi-touch-area {
    height: 100%;
    width: 100%;
+   z-index: 99;
  }
  .noUi-state-tap .noUi-connect,
  .noUi-state-tap .noUi-origin {

@@ -36,8 +36,8 @@ module CsvToJson
                 "country_downcase"=> country.downcase,
                 "city"=> city,
                 "city_downcase"=> city.downcase,
-                "city_country" => "#{city}_#{country}".downcase,
-                
+                "PlaceID" => "#{city}_#{country}".downcase,
+                "city"=> city,
                 "region"=> table[index]['Region'].to_s,
                 "placeName"=> table[index]['PlaceName'].to_s,
                 "popupContent" => "done ",

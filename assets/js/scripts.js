@@ -4,7 +4,7 @@
      * @param string 
      * @return int
      */
-        function timestamp(str) {
+    function timestamp(str) {
         return parseInt(new Date(str).getTime());
     }
 
@@ -136,86 +136,114 @@ function get_end_date(){
 
 
 
-function Intersection_map(){
 
-    // var map = L.map('mapid').setView([8.75,42.19], 3);
-	var map = L.map('mapid').setView([51.505, -0.09], 13);
-
-	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-		maxZoom: 4,
-		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
-			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-		id: 'mapbox/light-v9',
-		tileSize: 512,
-		zoomOffset: -1,
-        mixZoom: 3,
-	}).addTo(map);
-
-
-    var start_date = get_start_date();
-    var end_date = get_end_date();
-
-    var mapData = {"type":"FeatureCollection","features":[]};
-
-    console.log(mapData.features);
-    for (var date in  IntersectionDB ) {
-
-        if(parseInt(start_date) <= parseInt(date)){
-            // mapData[date] = IntersectionDB[date];
-
-        }
-        console.log(date);
-    }
-
-    mapData = CountryDB;
-
-
-	function onEachFeature(feature, layer) {
+$(".date-selector .indicator").on("change", function (e) {
         
-        var latlng = layer._latlng;
-
-	}
-
-
-    L.geoJSON([mapData], {
-
-		onEachFeature: onEachFeature,
-
-        pointToLayer: function (feature, latlng) {
-            
-            L.circle(latlng, 80000, {
-                fillOpacity: 0.5
-            }).addTo(map).bindPopup("I am a circle.");
-
-			return L.circleMarker(latlng, {
-				radius: 8,
-				weight: 1,
-				opacity: 1,
-				fillOpacity: 0.8
-			});
-		}
-
-	}).addTo(map);
-
-
-
-    map.on('click', function(e){
-        var coord = e.latlng;
-        var lat = coord.lat;
-        var lng = coord.lng;
-        //console.log("You clicked the map at latitude: " + lat + " and longitude: " + lng);
-    });
-    
-}
-
-
+    console.log("ok");
+    changeSliderRange(L, map, mapData);
+});
 
 
 
 class Intersections{
+
     constructor() { 
         slider_range();
-        Intersection_map();
+        this.Intersection_map();
+    }
+
+
+    Intersection_map() {
+        // var map = L.map('mapid').setView([8.75,42.19], 3);
+        var map = L.map('mapid').setView([51.505, -0.09], 13);
+
+        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+            maxZoom: 4,
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+                'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            id: 'mapbox/light-v9',
+            tileSize: 512,
+            zoomOffset: -1,
+            mixZoom: 3,
+        }).addTo(map);
+
+        var mapData = {"type":"FeatureCollection","features":[]};
+
+        // console.log(mapData.features);
+
+        var mapDataTeamp = CountryDB.features;
+        
+        
+        var start_date = get_start_date();
+        var end_date = get_end_date();
+
+        for (var date in  IntersectionDB ) {
+            for (var i in  IntersectionDB[date] ) {
+
+                var checkEndTime = IntersectionDB[date][i][0].EndDate;
+                if(checkEndTime != ""){
+                    checkEndTime = timestamp(checkEndTime)
+                }else{
+                    checkEndTime = 0;
+                }
+
+                if(timestamp(start_date) <= timestamp(date)
+                    || timestamp(end_date)  > checkEndTime){
+
+                    for (let j in mapDataTeamp) {
+
+                        // var PlaceId = mapDataTeamp[j].properties.PlaceID;
+                        // console.log(PlaceId)
+                        // console.log(mapDataTeamp[j])
+                        if(i == mapDataTeamp[j].properties.PlaceID){
+
+                            mapData.features.push(mapDataTeamp[j]);
+                            delete mapDataTeamp[j];
+                        }
+                    }
+                    // console.log(IntersectionDB[date][i][0]);
+                    // console.log("start date = " + parseInt(start_date) + '<=' + parseInt(date));
+                    // console.log("end date = " + parseInt(end_date) + '<=' + parseInt(date));
+
+                    // mapData[date] = IntersectionDB[date];
+                }
+            }
+        }
+
+        function onEachFeature(feature, layer) {
+            var latlng = layer._latlng;
+        }
+
+
+        L.geoJSON([mapData], {
+
+            onEachFeature: onEachFeature,
+
+            pointToLayer: function (feature, latlng) {
+                
+                L.circle(latlng, 80000, {
+                    fillOpacity: 0.5
+                }).addTo(map).bindPopup("I am a circle.");
+
+                // return L.circleMarker(latlng, {
+                // 	radius: 8,
+                // 	weight: 1,
+                // 	opacity: 1,
+                // 	fillOpacity: 0.8
+                // });
+            }
+
+        }).addTo(map);
+
+
+
+        map.on('click', function(e){
+            var coord = e.latlng;
+            var lat = coord.lat;
+            var lng = coord.lng;
+            //console.log("You clicked the map at latitude: " + lat + " and longitude: " + lng);
+        });
+        
     }
 
 }
@@ -224,4 +252,9 @@ class Intersections{
 // remove legend popup
 $(".legend").on('click', function(){
     $(this).fadeOut(300);
+});
+
+// active pointer
+$("").on('click', function(){
+    
 });
