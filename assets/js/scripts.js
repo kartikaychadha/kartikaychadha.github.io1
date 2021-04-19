@@ -90,32 +90,8 @@ var geoJSON = L.geoJSON([]);
 
         });
 
-        var values = dateSlider.noUiSlider.get();
 
-        var start_date = convertTimestampNumber(values[0]);
-        var end_date = convertTimestampNumber(values[1]);
-
-        var geoJSON = L.geoJSON([]);
-
-        var data = {"type":"FeatureCollection","features":[]};
-        var mapDataTeamp = CountryDB.features;
-        // console.log(range);
-        for (var date in  IntersectionDB ) {
-            for (var i in  IntersectionDB[date] ) {
-
-                if( parseInt(start_date) < parseInt(date) ){
-
-                    for (let j in mapDataTeamp) {
-                        if(i == mapDataTeamp[j].properties.PlaceID){
-                            data.features.push(mapDataTeamp[j]);
-                            
-                        }
-                    }
-                }
-            }
-        }
-
-        geoJSON = L.geoJSON([data], {
+        L.geoJSON([CountryDB], {
             pointToLayer: function (feature, latlng) {
                 return L.circleMarker(latlng, {
                     radius: 8,
@@ -152,13 +128,15 @@ var geoJSON = L.geoJSON([]);
                 }
             }
             var data = {"type":"FeatureCollection","features":[]};
+
+            console.log(CountryDB);
             //
             for (var date in  IntersectionDB ) {
                 for (var i in  IntersectionDB[date] ) {
-                    if( parseInt(start_date) > parseInt(date)  && false){
+                    if( parseInt(start_date) > parseInt(date) ){
                         for (let j in CountryDB.features) {
-                            if(i == mapDataTeamp[j].properties.PlaceID){
-                                data.features.push(mapDataTeamp[j]);
+                            if(i == CountryDB.features[j].properties.PlaceID){
+                                data.features.push(CountryDB.features[j]);
                                 // delete mapDataTeamp[j];
                             }
                         }
@@ -168,18 +146,18 @@ var geoJSON = L.geoJSON([]);
 
             console.log(data);
             //
-            // L.geoJSON([data], {
-            //     pointToLayer: function (feature, latlng) {
-            //         return L.circleMarker(latlng, {
-            //             radius: 8,
-            //             fillColor: "#ff7800",
-            //             color: "#000",
-            //             weight: 1,
-            //             opacity: 1,
-            //             fillOpacity: 0.8
-            //         });
-            //     }
-            // }).addTo(map);
+            L.geoJSON([data], {
+                pointToLayer: function (feature, latlng) {
+                    return L.circleMarker(latlng, {
+                        radius: 8,
+                        fillColor: "#ff7800",
+                        color: "#000",
+                        weight: 1,
+                        opacity: 1,
+                        fillOpacity: 0.8
+                    });
+                }
+            }).addTo(map);
 
             // console.log(geoJSON);
         });
