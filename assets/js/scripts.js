@@ -134,6 +134,7 @@ var geoJSON = L.geoJSON([]);
             for (var date in  IntersectionDB ) {
                 for (var i in  IntersectionDB[date] ) {
                     if( parseInt(start_date) > parseInt(date) ){
+                        
                         for (let j in CountryDB.features) {
                             if(i == CountryDB.features[j].properties.PlaceID){
                                 data.features.push(CountryDB.features[j]);
