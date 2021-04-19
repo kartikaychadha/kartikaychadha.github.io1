@@ -244,40 +244,7 @@ class Intersections{
                 if(map._layers[layoutI].feature  !== undefined )
                     map._layers[layoutI].remove()
             }
-
-
-            var mapDataTeamp = CountryDB.features;
-
-            var start_date = get_start_date();
-            var end_date = get_end_date();
-
-            for (var date in  IntersectionDB ) {
-                for (var i in  IntersectionDB[date] ) {
-
-                    var checkEndTime = IntersectionDB[date][i][0].EndDate;
-                    if(checkEndTime != ""){
-                        checkEndTime = timestamp(checkEndTime)
-                    }else{
-                        checkEndTime = 0;
-                    }
-
-                    if(timestamp(start_date) <= timestamp(date)
-                        || timestamp(end_date)  > checkEndTime || checkEndTime == 0 ){
-
-                        for (let j in mapDataTeamp) {
-
-                            // var PlaceId = mapDataTeamp[j].properties.PlaceID;
-                            if(i == mapDataTeamp[j].properties.PlaceID){
-
-                                Intersections.prototype.data.features.push(mapDataTeamp[j]);
-                                delete mapDataTeamp[j];
-                            }
-                        }
-                    }
-                }
-            }
-
-
+            
             start =false;
         });
 
