@@ -1,4 +1,16 @@
 
+// var map = L.map('mapid').setView([8.75,42.19], 3);
+var map = L.map('mapid').setView([51.505, -0.09], 13);
+L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+    maxZoom: 4,
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+        'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    id: 'mapbox/light-v9',
+    tileSize: 512,
+    zoomOffset: -1,
+    mixZoom: 3,
+}).addTo(map);
+ 
  // Create a new date from a string, return as a timestamp.
     /**
      * @param string 
@@ -75,6 +87,8 @@
             } else {
                 $('.date-end').html( date );
             }
+
+            // new Intersections();
         });
 
         // date minisecound to year "YYYY" // 2000
@@ -135,44 +149,28 @@ function get_end_date(){
 }
 
 
-
-
-$(".date-selector .indicator").on("change", function (e) {
-        
-    console.log("ok");
-    changeSliderRange(L, map, mapData);
-});
-
-
-
 class Intersections{
 
+    data = {"type":"FeatureCollection","features":[]};
+    geoJSONLayer;
+
+    circleMarkers = {};
+
     constructor() { 
+
+        this.filterDate();
+
+        this.range();
+
         slider_range();
+
         this.Intersection_map();
+        this.update();
     }
 
-
-    Intersection_map() {
-        // var map = L.map('mapid').setView([8.75,42.19], 3);
-        var map = L.map('mapid').setView([51.505, -0.09], 13);
-
-        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-            maxZoom: 4,
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
-                'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-            id: 'mapbox/light-v9',
-            tileSize: 512,
-            zoomOffset: -1,
-            mixZoom: 3,
-        }).addTo(map);
-
-        var mapData = {"type":"FeatureCollection","features":[]};
-
-        // console.log(mapData.features);
+    filterDate(){
 
         var mapDataTeamp = CountryDB.features;
-        
         
         var start_date = get_start_date();
         var end_date = get_end_date();
@@ -193,48 +191,37 @@ class Intersections{
                     for (let j in mapDataTeamp) {
 
                         // var PlaceId = mapDataTeamp[j].properties.PlaceID;
-                        // console.log(PlaceId)
-                        // console.log(mapDataTeamp[j])
                         if(i == mapDataTeamp[j].properties.PlaceID){
 
-                            mapData.features.push(mapDataTeamp[j]);
+                            this.data.features.push(mapDataTeamp[j]);
                             delete mapDataTeamp[j];
                         }
                     }
-                    // console.log(IntersectionDB[date][i][0]);
-                    // console.log("start date = " + parseInt(start_date) + '<=' + parseInt(date));
-                    // console.log("end date = " + parseInt(end_date) + '<=' + parseInt(date));
-
-                    // mapData[date] = IntersectionDB[date];
                 }
             }
         }
 
-        function onEachFeature(feature, layer) {
-            var latlng = layer._latlng;
-        }
+    }
 
+    range(){}
 
-        L.geoJSON([mapData], {
+    Intersection_map() {
+       
 
-            onEachFeature: onEachFeature,
+        this.geoJSONLayer = L.geoJSON([this.data], {
 
             pointToLayer: function (feature, latlng) {
-                
-                L.circle(latlng, 80000, {
-                    fillOpacity: 0.5
-                }).addTo(map).bindPopup("I am a circle.");
-
-                // return L.circleMarker(latlng, {
-                // 	radius: 8,
-                // 	weight: 1,
-                // 	opacity: 1,
-                // 	fillOpacity: 0.8
-                // });
+                return L.circleMarker(latlng, {
+                    radius: 8,
+                    fillColor: "#ff7800",
+                    color: "#000",
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                });
             }
 
         }).addTo(map);
-
 
 
         map.on('click', function(e){
@@ -246,7 +233,78 @@ class Intersections{
         
     }
 
+    update(){
+
+        $('.date-selector').bind('DOMSubtreeModified', function(){
+
+            var start = true;
+            if(!start){ return ;}
+
+            for (var layoutI in map._layers){
+                if(map._layers[layoutI].feature  !== undefined )
+                    map._layers[layoutI].remove()
+            }
+
+
+            var mapDataTeamp = CountryDB.features;
+
+            var start_date = get_start_date();
+            var end_date = get_end_date();
+
+            for (var date in  IntersectionDB ) {
+                for (var i in  IntersectionDB[date] ) {
+
+                    var checkEndTime = IntersectionDB[date][i][0].EndDate;
+                    if(checkEndTime != ""){
+                        checkEndTime = timestamp(checkEndTime)
+                    }else{
+                        checkEndTime = 0;
+                    }
+
+                    if(timestamp(start_date) <= timestamp(date)
+                        || timestamp(end_date)  > checkEndTime || checkEndTime == 0 ){
+
+                        for (let j in mapDataTeamp) {
+
+                            // var PlaceId = mapDataTeamp[j].properties.PlaceID;
+                            if(i == mapDataTeamp[j].properties.PlaceID){
+
+                                Intersections.prototype.data.features.push(mapDataTeamp[j]);
+                                delete mapDataTeamp[j];
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            start =false;
+        });
+
+
+
+        return true;
+    }
+
 }
+
+
+function onEachFeature(feature, layer) {
+
+    var latlng = layer;
+    console.log(latlng);
+    // L.circleMarker(latlng, {
+    //     radius: 8,
+    //     fillColor: "#ff7800",
+    //     color: "#000",
+    //     weight: 1,
+    //     opacity: 1,
+    //     fillOpacity: 0.8
+    // }).addTo(map)
+}
+
+
+
 
 
 // remove legend popup
