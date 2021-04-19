@@ -37,8 +37,8 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
      * slider date init;
      */
     function slider_range(){
-     
-        //   // slider range
+
+          // slider range
         var range_all_sliders = {
             'min': [ timestamp('1889')],
             "8.333333333%": [timestamp('1899')],
@@ -88,7 +88,6 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
                 $('.date-end').html( date );
             }
 
-            // new Intersections();
         });
 
         // date minisecound to year "YYYY" // 2000
@@ -110,12 +109,83 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 
         // fixed top spacing issue
         $(".noUi-handle-lower").css('top', '-12px');
+
+        dateSlider.noUiSlider.on('end', function (e) {
+
+
+            for (var layoutI in map._layers){
+                if(map._layers[layoutI].feature  !== undefined )
+                    map._layers[layoutI].remove()
+            }
+
+            var start_date = convertTimestamp(e[0]);
+            var end_date = convertTimestamp(e[1]);
+
+
+
+            console.log(start_date);
+
+
+            var data = {"type":"FeatureCollection","features":[]};
+            var mapDataTeamp = CountryDB.features;
+
+            var start_date = get_start_date();
+            var end_date = get_end_date();
+
+            for (var date in  IntersectionDB ) {
+                for (var i in  IntersectionDB[date] ) {
+
+                    var checkEndTime = IntersectionDB[date][i][0].EndDate;
+                    if(checkEndTime != ""){
+                        checkEndTime = timestamp(checkEndTime)
+                    }else{
+                        checkEndTime = 0;
+                    }
+
+                    if(timestamp(start_date) <= timestamp(date)
+                        || timestamp(end_date)  > checkEndTime || checkEndTime == 0 ){
+
+                        for (let j in mapDataTeamp) {
+
+                            // var PlaceId = mapDataTeamp[j].properties.PlaceID;
+                            if(i == mapDataTeamp[j].properties.PlaceID){
+
+                                data.features.push(mapDataTeamp[j]);
+                                delete mapDataTeamp[j];
+                            }
+                        }
+                    }
+                }
+            }
+
+            L.geoJSON([data], {
+
+                pointToLayer: function (feature, latlng) {
+                    return L.circleMarker(latlng, {
+                        radius: 8,
+                        fillColor: "#ff7800",
+                        color: "#000",
+                        weight: 1,
+                        opacity: 1,
+                        fillOpacity: 0.8
+                    });
+                }
+
+            }).addTo(map);
+
+        });
+
+
+
  }
 
- /* ========================================================================
- * 
- * ========================================================================
- */ 
+
+
+
+/* ========================================================================
+*
+* ========================================================================
+*/
 
 
 
@@ -151,107 +221,18 @@ function get_end_date(){
 
 class Intersections{
 
-    data = {"type":"FeatureCollection","features":[]};
-    geoJSONLayer;
-
-    circleMarkers = {};
 
     constructor() { 
 
         this.filterDate();
 
-        this.range();
-
         slider_range();
-
-        this.Intersection_map();
-        this.update();
     }
 
     filterDate(){
 
-        var mapDataTeamp = CountryDB.features;
-        
-        var start_date = get_start_date();
-        var end_date = get_end_date();
-
-        for (var date in  IntersectionDB ) {
-            for (var i in  IntersectionDB[date] ) {
-
-                var checkEndTime = IntersectionDB[date][i][0].EndDate;
-                if(checkEndTime != ""){
-                    checkEndTime = timestamp(checkEndTime)
-                }else{
-                    checkEndTime = 0;
-                }
-
-                if(timestamp(start_date) <= timestamp(date)
-                    || timestamp(end_date)  > checkEndTime || checkEndTime == 0 ){
-
-                    for (let j in mapDataTeamp) {
-
-                        // var PlaceId = mapDataTeamp[j].properties.PlaceID;
-                        if(i == mapDataTeamp[j].properties.PlaceID){
-
-                            this.data.features.push(mapDataTeamp[j]);
-                            delete mapDataTeamp[j];
-                        }
-                    }
-                }
-            }
-        }
-
     }
 
-    range(){}
-
-    Intersection_map() {
-       
-
-        this.geoJSONLayer = L.geoJSON([this.data], {
-
-            pointToLayer: function (feature, latlng) {
-                return L.circleMarker(latlng, {
-                    radius: 8,
-                    fillColor: "#ff7800",
-                    color: "#000",
-                    weight: 1,
-                    opacity: 1,
-                    fillOpacity: 0.8
-                });
-            }
-
-        }).addTo(map);
-
-
-        map.on('click', function(e){
-            var coord = e.latlng;
-            var lat = coord.lat;
-            var lng = coord.lng;
-            //console.log("You clicked the map at latitude: " + lat + " and longitude: " + lng);
-        });
-        
-    }
-
-    update(){
-
-        $('.date-selector').bind('DOMSubtreeModified', function(){
-
-            var start = true;
-            if(!start){ return ;}
-
-            for (var layoutI in map._layers){
-                if(map._layers[layoutI].feature  !== undefined )
-                    map._layers[layoutI].remove()
-            }
-            
-            start =false;
-        });
-
-
-
-        return true;
-    }
 
 }
 
