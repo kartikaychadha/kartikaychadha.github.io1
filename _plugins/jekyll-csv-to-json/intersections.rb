@@ -61,7 +61,7 @@ module CsvToJson
 
                     begin
                         # oparation start // [YYYY-MM][city_country]
-                        data[start_date][city_country.to_s][index] = {
+                        data[start_date][city_country.to_s] = {
                             "AuthorID"=> table.headers[1].gsub(' ', ''),
                             "EndCitation"=> table[index][7].to_s,
                             "EndDate"=>  getDate(table[index][6]).strftime('%Y-%m-%d'),
@@ -78,9 +78,9 @@ module CsvToJson
                         rescue ArgumentError
                         
                     end
-                    index+=1
+            
                 end
-                
+                index+=1
             end
 
             

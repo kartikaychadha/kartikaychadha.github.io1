@@ -15,6 +15,7 @@ module CsvToJson
       # no-op for default
       @csv_dir = "_csv"
       @done = false
+      @site
     end
 
     def generate(site)
@@ -22,6 +23,8 @@ module CsvToJson
       if @done
         return
       end
+
+      @site = site
 
       base = File.join(site.source, @csv_dir )
       return unless File.directory?(base) && (!site.safe || !File.symlink?(base))
@@ -36,6 +39,7 @@ module CsvToJson
 
       # generate author
       # generate_author(site, movement_files)
+      generate_place(site, place_files)
 
       generate_intersections(site, movement_files)
 
@@ -76,6 +80,12 @@ module CsvToJson
       end
 
       @done = true
+    end
+
+    def read_csv(site, entry)
+      entry = File.join(site.source, @csv_dir, entry)
+      entry = CSV.read(entry, :headers => true)
+      return entry
     end
 
     def getDate (date)
