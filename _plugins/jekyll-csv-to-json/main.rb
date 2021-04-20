@@ -36,10 +36,13 @@ module CsvToJson
 
       # generate author
       # generate_author(site, movement_files)
+
+      generate_intersections(site, movement_files)
+
       # generate countries
-      generate_countries(site, place_files, movement_files)
+      # generate_countries(site, place_files, movement_files)
       # generate countries
-      # generate_intersections(site, movement_files)
+     
 
       ## movement_files
       # movement_files.each do |entry|

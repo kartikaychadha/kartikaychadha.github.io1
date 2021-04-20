@@ -1,4 +1,3 @@
-
 // var map = L.map('mapid').setView([8.75,42.19], 3);
 var map = L.map('mapid').setView([51.505, -0.09], 13);
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
@@ -13,83 +12,129 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 
 var geoJSON = L.geoJSON([]);
 
- // Create a new date from a string, return as a timestamp.
-    /**
-     * @param string 
-     * @return int
-     */
-    function timestamp(str) {
-        return parseInt(new Date(str).getTime());
-    }
-
-    /**
-     * 
-     * @param int
-     * @return  string // "m YYYY"
-     */
-    function convertTimestamp( milliseconds )
-    {
-        return new Date(parseInt(milliseconds)).toLocaleDateString('en-GB', {
-            month : 'short',
-            year : 'numeric'
-        });
-    }
-
-    /**
-     *
-     * @param int
-     * @return  string // "m YYYY"
-     */
-    function convertTimestampNumber( milliseconds )
-    {
-        var date =  new Date(parseInt(milliseconds));
-
-        var year  = date.getFullYear(),
-            month = (date.getMonth() + 1).toString().padStart(2, "0");
-        return year +"-" + month;
-    }
-
+// Create a new date from a string, return as a timestamp.
+/**
+ * @param string 
+ * @return int
+ */
+function timestamp(str) {
+    return parseInt(new Date(str).getTime());
+}
 
 /**
-     * slider date init;
-     */
-    function slider_range(){
+ * 
+ * @param int
+ * @return  string // "m YYYY"
+ */
+function convertTimestamp(milliseconds) {
+    return new Date(parseInt(milliseconds)).toLocaleDateString('en-GB', {
+        month: 'short',
+        year: 'numeric'
+    });
+}
 
-          // slider range
+/**
+ *
+ * @param int
+ * @return  string // "m YYYY"
+ */
+function convertTimestampNumber(milliseconds) {
+    var date = new Date(parseInt(milliseconds));
+
+    var year = date.getFullYear(),
+        month = (date.getMonth() + 1).toString().padStart(2, "0");
+    return year + "-" + month;
+}
+
+
+
+
+/* ========================================================================
+*
+* ========================================================================
+*/
+
+
+
+class Trajectories {
+
+    constructor() {
+        slider_range();
+    }
+}
+
+
+function get_start_date() {
+
+    var date = new Date($(".date-start").html().trim());
+
+    var year = date.getFullYear(),
+        month = (date.getMonth() + 1).toString().padStart(2, "0");
+
+    return year + "-" + month;
+}
+
+
+function get_end_date() {
+
+    var date = new Date($(".date-end").html().trim());
+
+    var year = date.getFullYear(),
+        month = (date.getMonth() + 1).toString().padStart(2, "0");
+
+    return year + "-" + month;
+}
+
+var dateSlider = document.getElementById('slider-date');
+
+class Intersections {
+
+    data = {};
+
+    constructor() {
+        this.createSlider();
+        this.init();
+    }
+
+    createSlider(){
+        // slider range
+
         var range_all_sliders = {
-            'min': [ timestamp('1889')],
-            "8.333333333%": [timestamp('1899')],
-            "16.6667%": [timestamp('1909')],
-            "25%": [timestamp('1919')],
-            "33.3333%": [timestamp('1929')],
-            "41.6667%": [timestamp('1939')],
-            "50%": [timestamp('1949')],
-            "58.3333%%": [timestamp('1959')],
-            "66.6667%": [timestamp('1969')],
-            "75%": [timestamp('1979')],
-            "83.3333%": [timestamp('1989')],
-            "91.6667%": [timestamp('1999')],
-            'max': [ timestamp('2010') ]
+            'min': [timestamp('' + minDateRange)],
+            "8.333333333%": [timestamp('' + (minDateRange + 10))],
+            "16.6667%": [timestamp('' + (minDateRange +20))],
+            "25%": [timestamp('' + (minDateRange +30))],
+            "33.3333%": [timestamp('' + (minDateRange +40))],
+            "41.6667%": [timestamp('' + (minDateRange +50))],
+            "50%": [timestamp('' + (minDateRange +60))],
+            "58.3333%%": [timestamp('' + (minDateRange +70))],
+            "66.6667%": [timestamp('' + (minDateRange +80))],
+            "75%": [timestamp('' + (minDateRange +90))],
+            "83.3333%": [timestamp('' + (minDateRange +100))],
+            "91.6667%": [timestamp('' +( minDateRange +110))],
+            'max': [timestamp('' + (minDateRange +120))]
         }
 
-        var dateSlider = document.getElementById('slider-date');
         //create a slider
         noUiSlider.create(dateSlider, {
-
             range: range_all_sliders,
             orientation: 'vertical',
             connect: true,
-
-        // Two more timestamps indicate the handle starting positions.
+            // Two more timestamps indicate the handle starting positions.
             start: [range_all_sliders.min, range_all_sliders.max],
             behaviour: 'tap',
             pips: {
                 mode: 'range',
                 density: 12
             },
-
         });
+        
+    }
 
+    /**
+ * slider date init;
+ */
+    init() {
 
         L.geoJSON([CountryDB], {
             pointToLayer: function (feature, latlng) {
@@ -107,76 +152,54 @@ var geoJSON = L.geoJSON([]);
         // set start point and end point
         dateSlider.noUiSlider.on('update', function (values, handle) {
             var date = new Date(parseInt(values[handle])).toLocaleDateString('default', {
-                month : 'short',
-                year : 'numeric'
+                month: 'short',
+                year: 'numeric'
             })
             if (handle) {
-                $('.date-start').html( date );
+                $('.date-start').html(date);
             } else {
-                $('.date-end').html( date );
+                $('.date-end').html(date);
             }
         });
+
 
         dateSlider.noUiSlider.on('change', function (values, handle) {
 
-            var start_date = convertTimestampNumber(values[0]);
-            var end_date = convertTimestampNumber(values[1]);
+            var start_date = parseInt(convertTimestampNumber(values[0]).replace('-', ''));
+            var end_date = parseInt(convertTimestampNumber(values[1]).replace('-', ''));
 
-            for (var layoutI in geoJSON._layers){
-                if(geoJSON._layers[layoutI]  !== undefined ) {
-                    geoJSON._layers[layoutI].remove()
-                }
-            }
-            var data = {"type":"FeatureCollection","features":[]};
+            TempDB = {};
+            for (var key in IntersectionDB) {
+                var dataIndex = parseInt("" + key.replace('-', ''));
 
-            console.log(CountryDB);
-            //
-            for (var date in  IntersectionDB ) {
-                for (var i in  IntersectionDB[date] ) {
-                    if( parseInt(start_date) > parseInt(date) ){
-                        
-                        for (let j in CountryDB.features) {
-                            if(i == CountryDB.features[j].properties.PlaceID){
-                                data.features.push(CountryDB.features[j]);
-                                // delete mapDataTeamp[j];
-                            }
-                        }
-                    }
+                if (end_date > dataIndex && start_date < dataIndex) {
+                    TempDB[key] = IntersectionDB[key]
                 }
+
             }
 
-            console.log(data);
-            //
-            L.geoJSON([data], {
-                pointToLayer: function (feature, latlng) {
-                    return L.circleMarker(latlng, {
-                        radius: 8,
-                        fillColor: "#ff7800",
-                        color: "#000",
-                        weight: 1,
-                        opacity: 1,
-                        fillOpacity: 0.8
-                    });
-                }
-            }).addTo(map);
+            console.dir(Intersections.prototype.setData(TempDB));
+            console.dir(Intersections.prototype.getData());
+            // console.dir(TempDB);
 
-            // console.log(geoJSON);
         });
 
+
+
         // date minisecound to year "YYYY" // 2000
-        $(".noUi-value").each(function(){
+        $(".noUi-value").each(function () {
             try {
                 $(this).html(
                     new Date(parseInt($(this).html()))
-                        .toLocaleDateString('en-GB', { year : 'numeric' })
+                        .toLocaleDateString('en-GB', { year: 'numeric' })
                 );
             } catch (error) {
-               // console.log("invalid date");
+                // console.log("invalid date");
             }
         });
 
         // remoev marker
-        $(".noUi-marker-vertical").each(function(){
+        $(".noUi-marker-vertical").each(function () {
             $(this).remove();
         });
 
@@ -185,60 +208,14 @@ var geoJSON = L.geoJSON([]);
     }
 
 
-
-
-/* ========================================================================
-*
-* ========================================================================
-*/
-
-
-
-class Trajectories{
-
-    constructor() { 
-        slider_range();
-    }
-}
-
-
-function get_start_date(){
-
-    var date = new Date($(".date-start").html().trim() );
-
-    var year  = date.getFullYear(),
-    month = (date.getMonth() + 1).toString().padStart(2, "0");
-
-    return year +"-" + month;
-}
-
-
-function get_end_date(){
-
-    var date = new Date($(".date-end").html().trim() );
-
-    var year  = date.getFullYear(),
-    month = (date.getMonth() + 1).toString().padStart(2, "0");
-
-    return year +"-" + month;
-}
-
-
-class Intersections{
-
-
-    constructor() { 
-
-        this.filterDate();
-
-        slider_range();
+    setData(data){
+        this.data = data
+        return true;
     }
 
-    filterDate(){
-
+    getData(){
+        return this.data;
     }
-
-
 }
 
 
@@ -261,11 +238,11 @@ function onEachFeature(feature, layer) {
 
 
 // remove legend popup
-$(".legend").on('click', function(){
+$(".legend").on('click', function () {
     $(this).fadeOut(300);
 });
 
 // active pointer
-$("").on('click', function(){
-    
+$("").on('click', function () {
+
 });
