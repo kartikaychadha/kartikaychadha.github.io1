@@ -90,29 +90,30 @@ var dateSlider = document.getElementById('slider-date');
 class Intersections {
 
     data = {};
+    layer = {};
 
     constructor() {
+        this.data = CountryDB.features;
         this.createSlider();
         this.init();
     }
 
-    createSlider(){
+    createSlider() {
         // slider range
-
-        var range_all_sliders = {
+        const range_all_sliders = {
             'min': [timestamp('' + minDateRange)],
             "8.333333333%": [timestamp('' + (minDateRange + 10))],
-            "16.6667%": [timestamp('' + (minDateRange +20))],
-            "25%": [timestamp('' + (minDateRange +30))],
-            "33.3333%": [timestamp('' + (minDateRange +40))],
-            "41.6667%": [timestamp('' + (minDateRange +50))],
-            "50%": [timestamp('' + (minDateRange +60))],
-            "58.3333%%": [timestamp('' + (minDateRange +70))],
-            "66.6667%": [timestamp('' + (minDateRange +80))],
-            "75%": [timestamp('' + (minDateRange +90))],
-            "83.3333%": [timestamp('' + (minDateRange +100))],
-            "91.6667%": [timestamp('' +( minDateRange +110))],
-            'max': [timestamp('' + (minDateRange +120))]
+            "16.6667%": [timestamp('' + (minDateRange + 20))],
+            "25%": [timestamp('' + (minDateRange + 30))],
+            "33.3333%": [timestamp('' + (minDateRange + 40))],
+            "41.6667%": [timestamp('' + (minDateRange + 50))],
+            "50%": [timestamp('' + (minDateRange + 60))],
+            "58.3333%%": [timestamp('' + (minDateRange + 70))],
+            "66.6667%": [timestamp('' + (minDateRange + 80))],
+            "75%": [timestamp('' + (minDateRange + 90))],
+            "83.3333%": [timestamp('' + (minDateRange + 100))],
+            "91.6667%": [timestamp('' + (minDateRange + 110))],
+            'max': [timestamp('' + (minDateRange + 120))]
         }
 
         //create a slider
@@ -128,62 +129,6 @@ class Intersections {
                 density: 12
             },
         });
-        
-    }
-
-    /**
- * slider date init;
- */
-    init() {
-
-        L.geoJSON([CountryDB], {
-            pointToLayer: function (feature, latlng) {
-                return L.circleMarker(latlng, {
-                    radius: 8,
-                    fillColor: "#ff7800",
-                    color: "#000",
-                    weight: 1,
-                    opacity: 1,
-                    fillOpacity: 0.8
-                });
-            }
-        }).addTo(map);
-
-        // set start point and end point
-        dateSlider.noUiSlider.on('update', function (values, handle) {
-            var date = new Date(parseInt(values[handle])).toLocaleDateString('default', {
-                month: 'short',
-                year: 'numeric'
-            })
-            if (handle) {
-                $('.date-start').html(date);
-            } else {
-                $('.date-end').html(date);
-            }
-        });
-
-
-        dateSlider.noUiSlider.on('change', function (values, handle) {
-
-            var start_date = parseInt(convertTimestampNumber(values[0]).replace('-', ''));
-            var end_date = parseInt(convertTimestampNumber(values[1]).replace('-', ''));
-
-            TempDB = {};
-            for (var key in IntersectionDB) {
-                var dataIndex = parseInt("" + key.replace('-', ''));
-
-                if (end_date > dataIndex && start_date < dataIndex) {
-                    TempDB[key] = IntersectionDB[key]
-                }
-
-            }
-
-            console.dir(Intersections.prototype.setData(TempDB));
-            console.dir(Intersections.prototype.getData());
-            // console.dir(TempDB);
-
-        });
-
 
 
         // date minisecound to year "YYYY" // 2000
@@ -205,35 +150,106 @@ class Intersections {
 
         // fixed top spacing issue
         $(".noUi-handle-lower").css('top', '-12px');
+
     }
 
 
-    setData(data){
-        this.data = data
-        return true;
+    current() {
+
+        var value = dateSlider.noUiSlider.get();
+        var start_date = parseInt(convertTimestampNumber(value[0]).replace('-', ''));
+        var end_date = parseInt(convertTimestampNumber(value[1]).replace('-', ''));
+
+        var InterTempDB = {};
+        for (var key in IntersectionDB) {
+            var dataIndex = parseInt("" + key.replace('-', ''));
+            if (end_date > dataIndex && start_date < dataIndex) {
+                var i = 0;
+                for (var ikey in IntersectionDB[key]) {
+                    InterTempDB[i] = IntersectionDB[key][ikey]
+                    i++;
+                }
+            }
+        }
+
+        // countries
+        var Countries = {};
+        var features = CountryDB.features;
+        for (let ckey in features) {
+            for (let InterKey in InterTempDB) {
+                var PlaceID = features[ckey].properties.PlaceID;
+                if (PlaceID == InterTempDB[InterKey].PlaceID) {
+                    Countries[ckey] = features[ckey];
+                    delete InterTempDB[InterKey];
+                }
+            }
+        }
+
+        //data
+        Intersections.prototype.data = Countries;
+        return Countries;
     }
 
-    getData(){
-        return this.data;
+
+    insertLayout() {
+
+        var layer = {}
+
+        for (let key in this.data) {
+
+            var latlng = this.data[key].geometry.coordinates;
+            layer[key] = L.circleMarker(latlng, {
+                radius: 8,
+                fillColor: "#ff7800",
+                color: "#000",
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.8
+            }).addTo(map);
+
+        }
+
+        Intersections.prototype.layer = layer;
+    }
+
+    /**
+     * slider date init;
+     */
+    init() {
+
+        Intersections.prototype.current();
+        Intersections.prototype.insertLayout()
+
+        // set start point and end point
+        dateSlider.noUiSlider.on('update', function (values, handle) {
+            var date = new Date(parseInt(values[handle]))
+                .toLocaleDateString('default', {
+                month: 'short',
+                year: 'numeric'
+            })
+            if (handle) {
+                $('.date-start').html(date);
+            } else {
+                $('.date-end').html(date);
+            }
+        });
+
+
+        dateSlider.noUiSlider.on('change', function (values, handle) {
+            Intersections.prototype.current();
+            Intersections.prototype.remove();
+            Intersections.prototype.insertLayout();
+        });
+    }
+
+    // return void
+    remove() {
+        for (let index in this.layer) {
+            this.layer[index].remove();
+        }
+        return 0;
     }
 }
-
-
-function onEachFeature(feature, layer) {
-
-    var latlng = layer;
-    console.log(latlng);
-    // L.circleMarker(latlng, {
-    //     radius: 8,
-    //     fillColor: "#ff7800",
-    //     color: "#000",
-    //     weight: 1,
-    //     opacity: 1,
-    //     fillOpacity: 0.8
-    // }).addTo(map)
-}
-
-
 
 
 
@@ -242,7 +258,3 @@ $(".legend").on('click', function () {
     $(this).fadeOut(300);
 });
 
-// active pointer
-$("").on('click', function () {
-
-});

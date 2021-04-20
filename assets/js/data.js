@@ -1,5 +1,7 @@
 ---
 ---
+// formate 
+var TempDB = {};
 
 // // var author = {{ site.data.countries | jsonify }};
 // // var continents = {{ site.data.continents | jsonify }};
@@ -14,8 +16,7 @@ var IntersectionDB = {{ site.data.intersections | jsonify }};
 // // var places = {{ site.data.places | jsonify }};
 
 
-// formate IntersectionDB
-var TempDB = {};
+
 
 // minDateRange
-const minDateRange = parseInt("{{ site.min_date_range }}");
+const minDateRange = {{ site.min_date_range }};

@@ -1,6 +1,6 @@
 module CsvToJson
-  EXPORT_JSON = TRUE
-  EXPORT_YML = TRUE
+  EXPORT_JSON = true
+  EXPORT_YML = true
 
   class Generator < Jekyll::Generator
     def save(site, filename, json)
