@@ -180,6 +180,13 @@ class Intersections {
                 var PlaceID = features[ckey].properties.PlaceID;
                 if (PlaceID == InterTempDB[InterKey].PlaceID) {
                     Countries[ckey] = features[ckey];
+
+                    //asigne intersection
+                    if(Countries[ckey].intersection === undefined){
+                        Countries[ckey].intersection = {};
+                    }
+                    Countries[ckey].intersection.PlaceID = InterTempDB[InterKey];
+                    
                     delete InterTempDB[InterKey];
                 }
             }
@@ -196,6 +203,8 @@ class Intersections {
         var layer = {}
 
         for (let key in this.data) {
+
+            console.log(this.data[key]);
 
             var latlng = this.data[key].geometry.coordinates;
             layer[key] = L.circleMarker(latlng, {

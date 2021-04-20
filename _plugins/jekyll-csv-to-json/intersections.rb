@@ -56,18 +56,18 @@ module CsvToJson
                     else
                         start_date_number = 0
                         data[start_date] = {}
-                        data[start_date][city_country] = []
+                        data[start_date][city_country.to_s] = []
                     end
 
                     begin
                         # oparation start // [YYYY-MM][city_country]
-                        data[start_date][city_country.to_s] = {
+                        data[start_date][city_country.to_s][index] = {
                             "AuthorID"=> table.headers[1].gsub(' ', ''),
                             "EndCitation"=> table[index][7].to_s,
                             "EndDate"=>  getDate(table[index][6]).strftime('%Y-%m-%d'),
                             "EndType"=> "departure",
                             "EntryIndex"=> index + 1,
-                            "Likelihood"=> 3,
+                            "Likelihood"=> table[index][7].to_s,
                             "Notes"=> "",
                             "PlaceID"=> table[index][8].to_s,
                             "StartCitation"=> "Arthur A. Schomburg papers, 1724-1938, reel 4--Schomburg Center",
@@ -78,9 +78,9 @@ module CsvToJson
                         rescue ArgumentError
                         
                     end
-            
+                    index+=1
                 end
-                index+=1
+                
             end
 
             
