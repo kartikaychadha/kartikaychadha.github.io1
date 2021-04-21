@@ -182,35 +182,29 @@ class Intersections {
         var end_date = parseInt(convertTimestampNumber(value[1]).replace('-', ''));
 
         var InterTempDB = {};
-        for (var key in intersectionData) {
+        for (let key in intersectionData) {
             var dataIndex = parseInt("" + key.replace('-', ''));
             // end_date > dataIndex &&
             if ( start_date < dataIndex ) {
-                for (const PlaceKey in intersectionData[key]) {
-                    for (const authorKey in intersectionData[key][PlaceKey]) {
+                for (let PlaceKey in intersectionData[key]) {
+                    for (let authorKey in intersectionData[key][PlaceKey]) {
+
                         var authorEnd = intersectionData[key][PlaceKey][authorKey]['EndDate'];
-                        
-                        if(authorEnd != "" || authorEnd != null){
+                        authorEnd = convertTimestampNumber(authorEnd+"").replace("-", "");
 
-                            authorEnd = convertTimestampNumber(authorEnd+"");
-                            console.log(authorEnd);
+                        if( authorEnd == "NaNNaN" || parseInt(authorEnd) < end_date ){
                             
-                        }
-                    }
-                   
-                }
+                            if(InterTempDB[PlaceKey] === undefined){
+                                InterTempDB[PlaceKey] = [];
+                            }
 
-                // if(end_date > dataIndex){
-                //     var i = 0;
-                //     for (var ikey in intersectionData[key]) {
-                //         InterTempDB[i] = intersectionData[key][ikey]
-                //         i++;
-                //     }
-                // }
+                            InterTempDB[PlaceKey].push(intersectionData[key][PlaceKey][authorKey]);    
+                        }
+
+                    }
+                }
             }
         }
-
-        return 0;
 
         // countries
         var Countries = {};
@@ -238,12 +232,17 @@ class Intersections {
                         delete InterTempDB[InterKey][AuthorIndex];
                     }
                 } 
+
+                
             }
         }
+
+        console.dir(Countries);
 
         Intersections.prototype.data = Countries;
         return Countries;
     }
+
 
 
     insertLayout() {
@@ -294,6 +293,7 @@ class Intersections {
             Intersections.prototype.current();
             Intersections.prototype.remove();
             Intersections.prototype.insertLayout();
+            console.log("ok");
         });
     }
 
