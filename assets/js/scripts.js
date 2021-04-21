@@ -90,6 +90,7 @@ var dateSlider = document.getElementById('slider-date');
 class Intersections {
 
     layer = {};
+    sliderRangeChange= false;
     authors = authorData;
     intersection = intersectionData;
     itinerarie = itinerarieData;
@@ -290,7 +291,7 @@ class Intersections {
             group.on('click', function() { 
 
                 Intersections.prototype.showAuthors(data[key]);
-                alert('Clicked on a member of the group!'); 
+                // console.log('Clicked on a member of the group!'); 
             });
 
             group.addTo(map);
@@ -339,10 +340,17 @@ class Intersections {
 
 
         dateSlider.noUiSlider.on('change', function (values, handle) {
-            Intersections.prototype.current();
-            Intersections.prototype.remove();
-            Intersections.prototype.insertLayout();
-            console.log("ok");
+            Intersections.prototype.sliderRangeChange = true;
+        });
+
+        dateSlider.noUiSlider.on('change', function (values, handle) {
+
+            if(Intersections.prototype.sliderRangeChange){
+                Intersections.prototype.sliderRangeChange = false;
+                Intersections.prototype.current();
+                Intersections.prototype.remove();
+                Intersections.prototype.insertLayout();
+            }
         });
     }
 
@@ -351,6 +359,8 @@ class Intersections {
         for (let index in this.layer) {
             this.layer[index].remove();
         }
+        $(".results .title").html("");
+        $("#intersections-results").html("");
         return 0;
     }
 
