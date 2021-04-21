@@ -252,9 +252,8 @@ class Intersections {
             var likelihoodCount = this.likelihoodCount(data[key].intersection);
             var latlng = data[key].geometry.coordinates;
 
-     
 
-            L.featureGroup([
+            var group = L.featureGroup([
                 L.circleMarker(latlng, {
                     radius: 8,
                     fillColor: "#ff7800",
@@ -262,8 +261,18 @@ class Intersections {
                     weight: 1,
                     opacity: 1,
                     fillOpacity: 0.8,
-                    className: 'point_02'
                 }), 
+
+                L.circle(latlng, {
+                    color: 'red',
+                    fillColor: '#f03',
+                    fillOpacity: 0.5,
+
+                    // radius: 8,
+                    // weight: 1,
+                    // opacity: 1,
+                    className: 'point_03'
+                }),
                 
                 L.circle(latlng, {
                     color: 'red',
@@ -276,13 +285,16 @@ class Intersections {
                     className: 'point_03'
                 })
 
-            ])
-                .bindPopup('Hello world!')
-                .on('click', function() { alert('Clicked on a member of the group!'); })
-                .addTo(map);
+            ]);
 
+            group.on('click', function() { 
 
-            // layer[key] = group;
+                Intersections.prototype.showAuthors(data[key]);
+                alert('Clicked on a member of the group!'); 
+            });
+
+            group.addTo(map);
+            layer[key] = group;
 
         }
 
@@ -340,6 +352,34 @@ class Intersections {
             this.layer[index].remove();
         }
         return 0;
+    }
+
+    // show authors
+    showAuthors(data){
+
+        var title = data['properties']['city'] + ", " + data['properties']['country'];
+
+        var html = ""+
+        '<div class="item id_4" style="opacity: 1;">Eslanda Goode Robeson'+
+        '<div class="item_date">'+
+        '1949-12&nbsp;–&nbsp;1950-01</div>'+
+        '</div>'+
+        '<div class="item id_10" style="opacity: 0.666667;">'+
+        'W.E.B. Dubois'+
+        '<div class="item_date">1959-02</div>'+
+        '</div>'+
+        ''+
+        '<div class="item id_9" style="opacity: 1;">'+
+        'René Depestre'+
+        '<div class="item_date">'+
+        '1960-11-30&nbsp;–&nbsp;1961-02'+
+        '</div>'+
+        '</div>'
+
+        $(".results .title").html(title);
+        $("#intersections-results").html(html);
+
+
     }
 }
 
