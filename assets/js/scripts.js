@@ -226,9 +226,8 @@ class Intersections {
                         //asigne intersection
                         if(Countries[ckey].intersection === undefined){
                             Countries[ckey].intersection = {};
-                            Countries[ckey].intersection[PlaceID] = {};
                         }
-                        Countries[ckey].intersection[PlaceID][AuthorIndex] = InterTempDB[InterKey][AuthorIndex];   
+                        Countries[ckey].intersection[AuthorIndex] = InterTempDB[InterKey][AuthorIndex];   
                         delete InterTempDB[InterKey][AuthorIndex];
                     }
                 } 
@@ -236,8 +235,6 @@ class Intersections {
                 
             }
         }
-
-        console.dir(Countries);
 
         Intersections.prototype.data = Countries;
         return Countries;
@@ -248,24 +245,64 @@ class Intersections {
     insertLayout() {
 
         var layer = {}
+        var data = this.data;
 
-        for (let key in this.data) {
+        for (let key in data) {
 
-            var latlng = this.data[key].geometry.coordinates;
-            layer[key] = L.circleMarker(latlng, {
-                radius: 8,
-                fillColor: "#ff7800",
-                color: "#000",
-                weight: 1,
-                opacity: 1,
-                fillOpacity: 0.8
-            }).addTo(map);
+            var likelihoodCount = this.likelihoodCount(data[key].intersection);
+            var latlng = data[key].geometry.coordinates;
+
+     
+
+            L.featureGroup([
+                L.circleMarker(latlng, {
+                    radius: 8,
+                    fillColor: "#ff7800",
+                    color: "#000",
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.8,
+                    className: 'point_02'
+                }), 
+                
+                L.circle(latlng, {
+                    color: 'red',
+                    fillColor: '#f03',
+                    fillOpacity: 0.5,
+
+                    // radius: 8,
+                    // weight: 1,
+                    // opacity: 1,
+                    className: 'point_03'
+                })
+
+            ])
+                .bindPopup('Hello world!')
+                .on('click', function() { alert('Clicked on a member of the group!'); })
+                .addTo(map);
+
+
+            // layer[key] = group;
 
         }
 
         Intersections.prototype.layer = layer;
     }
 
+
+    likelihoodCount(data){
+        var like = 1;
+
+        for (const key in data) {
+            if(data[key].Likelihood == 3){
+                return 3;
+            }
+            if (data[key].Likelihood > like) {
+                like = data[key].Likelihood;
+            }
+        }
+        return like;
+    }
     /**
      * slider date init;
      */

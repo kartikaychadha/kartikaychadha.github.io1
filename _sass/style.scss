@@ -857,17 +857,17 @@ path.map {
   stroke: transparent;
 }
 
-.point.point_01 {
+.leaflet-interactive.point_01 {
   fill-opacity: 0.25;
   stroke-opacity: 0.25;
 }
 
-.point.point_02 {
+.leaflet-interactive.point_02 {
   fill-opacity: 0.5;
   stroke-opacity: 0.5;
 }
 
-.point.point_03 {
+.leaflet-interactive.point_03 {
   fill-opacity: 1;
   stroke-opacity: 1;
 }
@@ -1008,3 +1008,4 @@ path.line {
     color: $black;
   }
 }
+
