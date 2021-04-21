@@ -38,13 +38,13 @@ module CsvToJson
       place_files.delete_if { |e| File.directory?(File.join(base, e)) }
 
       # generate author
-      # generate_author(site, movement_files)
+      generate_author(site, movement_files)
       generate_place(site, place_files)
 
       generate_intersections(site, movement_files)
 
       # generate countries
-      # generate_countries(site, place_files, movement_files)
+      generate_countries(site, place_files, movement_files)
       # generate countries
      
 

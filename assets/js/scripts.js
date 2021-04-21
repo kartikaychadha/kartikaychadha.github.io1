@@ -89,14 +89,35 @@ var dateSlider = document.getElementById('slider-date');
 
 class Intersections {
 
-    data = {};
     layer = {};
+    authors = authorData;
+    intersection = intersectionData;
+    itinerarie = itinerarieData;
+    continent = continentData;
+    places = placeData;
+    data = {};
 
     constructor() {
-        this.data = CountryDB.features;
+        // this.data = CountryDB.features;
+        self = this
         this.createSlider();
         this.init();
     }
+
+    buildAuthors() {
+        //authors
+        var author_ids =  this.db.author_id;
+        for (let key in author_ids) {
+            this.authors[author_ids[key]] =key;
+            this.author_names[key] = author_ids[key];
+        }
+    }
+
+
+    buildPlaces() {
+        this.places = this.db.places;      // Place JSON no longer requires processing.
+    }
+
 
     createSlider() {
         // slider range
@@ -161,38 +182,65 @@ class Intersections {
         var end_date = parseInt(convertTimestampNumber(value[1]).replace('-', ''));
 
         var InterTempDB = {};
-        for (var key in IntersectionDB) {
+        for (var key in intersectionData) {
             var dataIndex = parseInt("" + key.replace('-', ''));
-            if (end_date > dataIndex && start_date < dataIndex) {
-                var i = 0;
-                for (var ikey in IntersectionDB[key]) {
-                    InterTempDB[i] = IntersectionDB[key][ikey]
-                    i++;
+            // end_date > dataIndex &&
+            if ( start_date < dataIndex ) {
+                for (const PlaceKey in intersectionData[key]) {
+                    for (const authorKey in intersectionData[key][PlaceKey]) {
+                        var authorEnd = intersectionData[key][PlaceKey][authorKey]['EndDate'];
+                        
+                        if(authorEnd != "" || authorEnd != null){
+
+                            authorEnd = convertTimestampNumber(authorEnd+"");
+                            console.log(authorEnd);
+                            
+                        }
+                    }
+                   
                 }
+
+                // if(end_date > dataIndex){
+                //     var i = 0;
+                //     for (var ikey in intersectionData[key]) {
+                //         InterTempDB[i] = intersectionData[key][ikey]
+                //         i++;
+                //     }
+                // }
             }
         }
+
+        return 0;
 
         // countries
         var Countries = {};
-        var features = CountryDB.features;
+        var features = continentData.features;
         for (let ckey in features) {
             for (let InterKey in InterTempDB) {
                 var PlaceID = features[ckey].properties.PlaceID;
-                if (PlaceID == InterTempDB[InterKey].PlaceID) {
-                    Countries[ckey] = features[ckey];
-
-                    //asigne intersection
-                    if(Countries[ckey].intersection === undefined){
-                        Countries[ckey].intersection = {};
-                    }
-                    Countries[ckey].intersection.PlaceID = InterTempDB[InterKey];
-                    
+        
+                // chack avalable author
+                if(InterTempDB[InterKey].length == 0){
                     delete InterTempDB[InterKey];
+                    continue;
                 }
+                
+                // filter author
+                for (let AuthorIndex in InterTempDB[InterKey]) {
+                    if (PlaceID == InterTempDB[InterKey][AuthorIndex].PlaceID) {
+                        Countries[ckey] = features[ckey];
+                        //asigne intersection
+                        if(Countries[ckey].intersection === undefined){
+                            Countries[ckey].intersection = {};
+                            Countries[ckey].intersection[PlaceID] = {};
+                        }
+                        Countries[ckey].intersection[PlaceID][AuthorIndex] = InterTempDB[InterKey][AuthorIndex];   
+                        delete InterTempDB[InterKey][AuthorIndex];
+                    }
+                } 
             }
         }
 
-        //data
         Intersections.prototype.data = Countries;
         return Countries;
     }
@@ -203,8 +251,6 @@ class Intersections {
         var layer = {}
 
         for (let key in this.data) {
-
-            console.log(this.data[key]);
 
             var latlng = this.data[key].geometry.coordinates;
             layer[key] = L.circleMarker(latlng, {
