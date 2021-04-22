@@ -1,5 +1,5 @@
 // var map = L.map('mapid').setView([8.75,42.19], 3);
-var map = L.map('mapid').setView([51.505, -0.09], 13);
+var map = L.map('mapid').setView([51.505, -0.09], 4);
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
     maxZoom: 4,
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
@@ -7,7 +7,7 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
     id: 'mapbox/light-v9',
     tileSize: 512,
     zoomOffset: -1,
-    mixZoom: 3,
+    mixZoom: 4,
 }).addTo(map);
 
 var geoJSON = L.geoJSON([]);
@@ -247,51 +247,29 @@ class Intersections {
 
         var layer = {}
         var data = this.data;
+        data = continentData.features;
 
         for (let key in data) {
 
-            var likelihoodCount = this.likelihoodCount(data[key].intersection);
-            var latlng = data[key].geometry.coordinates;
+            // var likelihoodCount = this.likelihoodCount(data[key].intersection);
+            // var latlng = data[key].geometry.coordinates;
+
+            var latlng = data[key]['geometry']['coordinates']
 
 
-            var group = L.featureGroup([
-                L.circleMarker(latlng, {
-                    radius: 8,
-                    fillColor: "#ff7800",
-                    color: "#000",
-                    weight: 1,
-                    opacity: 1,
-                    fillOpacity: 0.8,
-                }), 
-
-                L.circle(latlng, {
-                    color: 'red',
-                    fillColor: '#f03',
-                    fillOpacity: 0.5,
-
-                    // radius: 8,
-                    // weight: 1,
-                    // opacity: 1,
-                    className: 'point_03'
-                }),
-                
-                L.circle(latlng, {
-                    color: 'red',
-                    fillColor: '#f03',
-                    fillOpacity: 0.5,
-
-                    // radius: 8,
-                    // weight: 1,
-                    // opacity: 1,
-                    className: 'point_03'
-                })
-
-            ]);
+            var group = L.circleMarker(latlng, {
+                radius: 8,
+				fillColor: "#ff7800",
+				color: "#000",
+				weight: 1,
+				opacity: 1,
+				fillOpacity: 0.8
+            });
 
             group.on('click', function() { 
 
                 Intersections.prototype.showAuthors(data[key]);
-                // console.log('Clicked on a member of the group!'); 
+                console.log('Clicked on a member of the group!'); 
             });
 
             group.addTo(map);
@@ -343,7 +321,7 @@ class Intersections {
             Intersections.prototype.sliderRangeChange = true;
         });
 
-        dateSlider.noUiSlider.on('change', function (values, handle) {
+        dateSlider.noUiSlider.on('end', function() {
 
             if(Intersections.prototype.sliderRangeChange){
                 Intersections.prototype.sliderRangeChange = false;
@@ -369,6 +347,7 @@ class Intersections {
 
         var title = data['properties']['city'] + ", " + data['properties']['country'];
 
+        alert(title);
         var html = ""+
         '<div class="item id_4" style="opacity: 1;">Eslanda Goode Robeson'+
         '<div class="item_date">'+
