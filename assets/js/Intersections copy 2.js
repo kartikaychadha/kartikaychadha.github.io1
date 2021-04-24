@@ -206,14 +206,6 @@ function InsertLayout() {
     L.geoJSON(continentData, {
 
         pointToLayer: function (feature, latlng) {
-
-            function increI(likelihood) {
-                var base = 50000;
-                var increment = 10000 * likelihood;
-
-                return base + increment;
-            }
-
             var users = getIntersectionUsers(feature.properties.PlaceID);
             if( Object.keys(users).length == 0){
                 return false;
@@ -221,7 +213,7 @@ function InsertLayout() {
             var likes = getMaxLikelihood(users);
 
             if(likes[3] != 0){
-                var layer3 =  L.circle(latlng, increI(likes[3]), {
+                var layer3 =  L.circle(latlng, 50000, {
                     radius: 8,
                     className: "point_03"
                 });
@@ -236,7 +228,7 @@ function InsertLayout() {
             }
 
             if(likes[2] != 0){
-                var layer2 =  L.circle(latlng, increI(likes[2]), {
+                var layer2 =  L.circle([latlng.lat, latlng.lng+.01], 50000, {
                     radius: 8,
                     className: "point_02"
                 });
@@ -252,7 +244,7 @@ function InsertLayout() {
             }
 
             if(likes[1] != 0){
-                var layer1 =  L.circleMarker(latlng, increI(likes[1]), {
+                var layer1 =  L.circleMarker([latlng.lat, latlng.lng +.02], 50000, {
                     radius: 8,
                     className: "point_01"
                 });
@@ -292,19 +284,17 @@ function getIntersectionUsers(placeID){
 
         // compre start range 
         if(start_range > StartDate){
-           // continue;
+            continue;
         } 
 
         // end date compre 
         if(data[key]['EndDate'] == ""){
             users[i] = data[key];
             i++;
-        }else{
-            users[i] = data[key];
         }
         
         if(end_range> EndDate){
-            // users[i] = data[key];
+            users[i] = data[key];
             i++;
         }
 
