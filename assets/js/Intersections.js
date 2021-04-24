@@ -210,6 +210,17 @@ function InsertLayout() {
         layer.on('click', function(){
             showAuthors(feature);
         });
+        var latlng = layer._latlng;
+
+        // var d=  L.circle(latlng, 70000, {
+        //     color: 'red',
+        //     fillColor: '#f03',
+        //     fillOpacity: 0.5
+        // }).addTo(map).bindPopup("I am a circle.");
+
+        // console.log(d);
+
+
         // var layers = {};
         //
         // var index  = feature['id'];
@@ -226,17 +237,59 @@ function InsertLayout() {
     L.geoJSON(continentDataTarget, {
 
         pointToLayer: function (feature, latlng) {
-            // console.log(i);
-            var layer =  L.circleMarker(latlng, {
-                radius: 8,
-                fillColor: "#ff7800",
-                color: "#000",
-                weight: 1,
-                opacity: 1,
-                fillOpacity: 0.8
-            });
-            geoJSONlayers[feature['id']] = layer;
-            return layer;
+
+            var users = getIntersectionUsers(feature.properties.PlaceID);
+            var likes = getMaxLikelihood(users);
+
+            if(likes[3] != 0){
+                var layer3 =  L.circle(latlng, 100000, {
+                    radius: 8,
+                    fillColor: "#ff7800",
+                    color: "#000",
+                    weight: 1,
+                    opacity: 6,
+                    fillOpacity: 0.8,
+                    className: 'point_01 point',
+                });
+                geoJSONlayers[parseInt(3 + ""+ feature['id'])] = layer3;
+            }
+
+            if(likes[2] != 0){
+                var layer2 =  L.circle(latlng, 80000, {
+                    radius: 8,
+                    fillColor: "#ff7800",
+                    color: "#000",
+                    weight: 1,
+                    opacity: 3,
+                    fillOpacity: 0.8,
+                    className: 'point_02 point',
+                });
+                geoJSONlayers[parseInt(2 + ""+ feature['id'])] = layer2;
+            }
+
+            if(likes[1] != 0){
+                var layer1 =  L.circle(latlng, 50000, {
+                    radius: 8,
+                    fillColor: "#ff7800",
+                    color: "#000",
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                });
+                geoJSONlayers[parseInt(1 + ""+ feature['id'])] = layer1;
+            }
+
+            if(layer3 !== undefined){
+                return layer3;
+            }
+
+            if(layer2 !== undefined){
+                return layer2;
+            }
+
+            return layer1;
+            
+
         },
         filter: function(feature) {
 
@@ -321,24 +374,14 @@ function showAuthors(feature){
     var id = 1;
     for (const key in users) {
 
+        var author_name = authorData[users[key].AuthorID];
+        // start date
+        var StartDate = "" + users[key].StartDate;
+        // end date
         var EndDate =  "";
         if(users[key].EndDate !== ''){
-            EndDate = "&nbsp;–&nbsp;" + new Date(users[key].EndDate)
-                .toLocaleDateString('default', {
-                month: 'short',
-                year: 'numeric'
-            });
+            EndDate = "&nbsp;–&nbsp;" + users[key].EndDate;
         }
-
-        var StartDate =""+ new Date(users[key].StartDate)
-            .toLocaleDateString('default', {
-                month: 'short',
-                year: 'numeric'
-            });
-
-            console.log(StartDate);
-
-        var author_name = authorData[users[key].AuthorID];
 
         html += '<div class="item id_'+id+'">'+ author_name +
                     '<div class="item_date">'+  StartDate + "" + EndDate + '</div>'+
@@ -349,6 +392,34 @@ function showAuthors(feature){
 
     $(".results .title").html(title);
     $("#intersections-results").html(html);
+}
+
+
+function getMaxLikelihood(users) {
+    var like = {
+        1: 0,
+        2: 0,
+        3: 0
+    };
+    
+    for (const key in users) {
+
+        switch (users[key].Likelihood) {
+            case 1:
+                like[1]++; 
+                break;
+            case 2:
+                like[2]++;
+                break;
+            case 3:
+                like[3]++;
+                break;
+        }
+    }
+
+    console.log(like);
+
+    return like;
 }
 
 // remove legend popup
