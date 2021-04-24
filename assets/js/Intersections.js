@@ -270,19 +270,74 @@ function InsertLayout() {
     }).addTo(map);
 }
 
+function getCurrentRange(likeAsInt = false) {
+    var range = Slider.noUiSlider.get();
+
+    var date =  new Date(parseInt(range[0]));
+    var year = date.getFullYear();
+
+    var month = date.getMonth();
+    if(month === undefined){
+        month = "0";
+    }
+
+    range[0] = year + "-" + ("0" + (month + 1)).slice(-2);
+
+
+    var date =  new Date(parseInt(range[1]));
+    var year = date.getFullYear();
+
+    var month = date.getMonth();
+    if(month === undefined){
+        month = "0";
+    }
+    range[1] = year + "-" + ("0" + (month + 1)).slice(-2);
+
+    //
+    if(likeAsInt){
+      range[0] = parseInt(range[0].replace('-', ''));
+      range[1] = parseInt(range[1].replace('-', ''));
+    }
+
+   return range;
+}
+
 function getIntersectionUsers(placeID){
     
     var users = {};    
-    var start_range = convertTimestampNumber(Slider.noUiSlider.get()[0]);
-    var end_range = convertTimestampNumber(Slider.noUiSlider.get()[1]);
-    
-
-    var data = targetIntersection[placeID];
+    var range = getCurrentRange(likeAsInt = true);
+    var start_range = range[0];
+    var end_range = range[1];
 
 
-    if(data === undefined){
-        return {};
+    var data = intersectionData;
+
+    // first target
+    for (let date in data) {
+        date = parseInt(date.replace('-', ''));
+        if(date < start_range || date < end_range){
+            delete data[date];
+        }
     }
+
+    //2nd target
+    for (const d_key in data) {
+        for (const c_key in data[d_key]) {
+            for (const a_key in data[d_key][c_key]) {
+                var StartDate = data[d_key][c_key][a_key]['StartDate'];
+                var EndDate = data[d_key][c_key][a_key]['EndDate'];
+                StartDate = convertTimestampNumber(StartDate);
+                EndDate = convertTimestampNumber(EndDate);
+
+
+                console.log(StartDate + " = " + EndDate);
+                return ;
+            }
+        }
+    }
+    console.dir(data);
+
+
     var i = 0;
     for (const key in data) {
         //check start date
@@ -380,6 +435,8 @@ function getMaxLikelihood(users) {
     }
     return like;
 }
+
+
 
 // remove legend popup
 $(".legend").on('click', function () {
