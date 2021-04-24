@@ -18,6 +18,9 @@ var geoJSON = L.geoJSON([]);
  * @return int
  */
 function timestamp(str) {
+    if(typeof str === 'number') {
+        str += "";
+    }
     return parseInt(new Date(str).getTime());
 }
 
@@ -63,43 +66,15 @@ class Trajectories {
     }
 }
 
+var Slider = document.getElementById('slider-date');
 
-function get_start_date() {
-
-    var date = new Date($(".date-start").html().trim());
-
-    var year = date.getFullYear(),
-        month = (date.getMonth() + 1).toString().padStart(2, "0");
-
-    return year + "-" + month;
-}
-
-
-function get_end_date() {
-
-    var date = new Date($(".date-end").html().trim());
-
-    var year = date.getFullYear(),
-        month = (date.getMonth() + 1).toString().padStart(2, "0");
-
-    return year + "-" + month;
-}
-
-var dateSlider = document.getElementById('slider-date');
-
+var geoJSONlayers = {};
 class Intersections {
 
-    layer = {};
-    sliderRangeChange= false;
-    authors = authorData;
-    intersection = intersectionData;
-    itinerarie = itinerarieData;
-    continent = continentData;
-    places = placeData;
+    intersection;
     data = {};
 
     constructor() {
-        // this.data = CountryDB.features;
         self = this
         this.createSlider();
         this.init();
@@ -123,23 +98,23 @@ class Intersections {
     createSlider() {
         // slider range
         const range_all_sliders = {
-            'min': [timestamp('' + minDateRange)],
-            "8.333333333%": [timestamp('' + (minDateRange + 10))],
-            "16.6667%": [timestamp('' + (minDateRange + 20))],
-            "25%": [timestamp('' + (minDateRange + 30))],
-            "33.3333%": [timestamp('' + (minDateRange + 40))],
-            "41.6667%": [timestamp('' + (minDateRange + 50))],
-            "50%": [timestamp('' + (minDateRange + 60))],
-            "58.3333%%": [timestamp('' + (minDateRange + 70))],
-            "66.6667%": [timestamp('' + (minDateRange + 80))],
-            "75%": [timestamp('' + (minDateRange + 90))],
-            "83.3333%": [timestamp('' + (minDateRange + 100))],
-            "91.6667%": [timestamp('' + (minDateRange + 110))],
-            'max': [timestamp('' + (minDateRange + 120))]
+            'min': [timestamp(minDateRange)],
+            "8.333333333%": [timestamp(minDateRange + 10)],
+            "16.6667%": [timestamp(minDateRange + 20)],
+            "25%": [timestamp( minDateRange + 30)],
+            "33.3333%": [timestamp( minDateRange + 40)],
+            "41.6667%": [timestamp(minDateRange + 50)],
+            "50%": [timestamp(minDateRange + 60)],
+            "58.3333%%": [timestamp(minDateRange + 70)],
+            "66.6667%": [timestamp(minDateRange + 80)],
+            "75%": [timestamp(minDateRange + 90)],
+            "83.3333%": [timestamp(minDateRange + 100)],
+            "91.6667%": [timestamp(minDateRange + 110)],
+            'max': [timestamp(minDateRange + 120)]
         }
 
         //create a slider
-        noUiSlider.create(dateSlider, {
+        noUiSlider.create(Slider, {
             range: range_all_sliders,
             orientation: 'vertical',
             connect: true,
@@ -177,8 +152,7 @@ class Intersections {
 
 
     current() {
-
-        var value = dateSlider.noUiSlider.get();
+        var value = Slider.noUiSlider.get();
         var start_date = parseInt(convertTimestampNumber(value[0]).replace('-', ''));
         var end_date = parseInt(convertTimestampNumber(value[1]).replace('-', ''));
 
@@ -198,102 +172,94 @@ class Intersections {
                             if(InterTempDB[PlaceKey] === undefined){
                                 InterTempDB[PlaceKey] = [];
                             }
-
                             InterTempDB[PlaceKey].push(intersectionData[key][PlaceKey][authorKey]);    
                         }
-
                     }
                 }
             }
         }
 
-        // countries
-        var Countries = {};
-        var features = continentData.features;
-        for (let ckey in features) {
-            for (let InterKey in InterTempDB) {
-                var PlaceID = features[ckey].properties.PlaceID;
-        
-                // chack avalable author
-                if(InterTempDB[InterKey].length == 0){
-                    delete InterTempDB[InterKey];
-                    continue;
-                }
-                
-                // filter author
-                for (let AuthorIndex in InterTempDB[InterKey]) {
-                    if (PlaceID == InterTempDB[InterKey][AuthorIndex].PlaceID) {
-                        Countries[ckey] = features[ckey];
-                        //asigne intersection
-                        if(Countries[ckey].intersection === undefined){
-                            Countries[ckey].intersection = {};
-                        }
-                        Countries[ckey].intersection[AuthorIndex] = InterTempDB[InterKey][AuthorIndex];   
-                        delete InterTempDB[InterKey][AuthorIndex];
-                    }
-                } 
-
-                
-            }
-        }
-
-        Intersections.prototype.data = Countries;
-        return Countries;
+        Intersections.prototype.intersection = InterTempDB;
     }
 
 
 
     insertLayout() {
 
-        var layer = {}
-        var data = this.data;
-        data = continentData.features;
+        Intersections.prototype.data = continentData;
+        var data = Intersections.prototype.data;
 
-        for (let key in data) {
+        function onEachFeature(feature, layer) {
+            // var layers = {};
+            //
+            // var index  = feature['id'];
+            // layers.push(Intersections.prototype.Layers);
+            //
+            // Intersections.prototype.Layers = layers;
+            // console.log(layers);
 
-            // var likelihoodCount = this.likelihoodCount(data[key].intersection);
-            // var latlng = data[key].geometry.coordinates;
-
-            var latlng = data[key]['geometry']['coordinates']
-
-
-            var group = L.circleMarker(latlng, {
-                radius: 8,
-				fillColor: "#ff7800",
-				color: "#000",
-				weight: 1,
-				opacity: 1,
-				fillOpacity: 0.8
-            });
-
-            group.on('click', function() { 
-
-                Intersections.prototype.showAuthors(data[key]);
-                console.log('Clicked on a member of the group!'); 
-            });
-
-            group.addTo(map);
-            layer[key] = group;
-
+            // [feature['id']] = layer;
         }
 
-        Intersections.prototype.layer = layer;
+
+        L.geoJSON(data, {
+
+            onEachFeature: onEachFeature,
+
+            pointToLayer: function (feature, latlng) {
+                // console.log(i);
+                var layer =  L.circleMarker(latlng, {
+                    radius: 8,
+                    fillColor: "#ff7800",
+                    color: "#000",
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                });
+                geoJSONlayers[feature['id']] = layer;
+                return layer;
+            },
+            filter: function(feature) {
+
+                var users = Intersections.prototype.findUsers(feature.properties.PlaceID);
+
+                if(users === null){
+                    return false;
+                }
+          
+                return true;
+               
+            }
+        }).addTo(map);
     }
 
+    findUsers(placeID){
+        var users = {};
+        var start_range = Slider.noUiSlider.get();
+        start_range = start_range[0];
 
-    likelihoodCount(data){
-        var like = 1;
+        var data = Intersections.prototype.intersection[placeID];
+
+        if(data === undefined){
+            return null;
+        }
 
         for (const key in data) {
-            if(data[key].Likelihood == 3){
-                return 3;
-            }
-            if (data[key].Likelihood > like) {
-                like = data[key].Likelihood;
-            }
+
+            console.log(data[key]['StartDate']);
+
+            // var check_start_date = function (params) {
+            
+            // }
+
         }
-        return like;
+
+
+       
+
+        return data;
     }
+
     /**
      * slider date init;
      */
@@ -303,7 +269,7 @@ class Intersections {
         Intersections.prototype.insertLayout()
 
         // set start point and end point
-        dateSlider.noUiSlider.on('update', function (values, handle) {
+        Slider.noUiSlider.on('update', function (values, handle) {
             var date = new Date(parseInt(values[handle]))
                 .toLocaleDateString('default', {
                 month: 'short',
@@ -317,29 +283,23 @@ class Intersections {
         });
 
 
-        dateSlider.noUiSlider.on('change', function (values, handle) {
-            Intersections.prototype.sliderRangeChange = true;
+        Slider.noUiSlider.on('change', function () {
+
+            Intersections.prototype.current();
+            Intersections.prototype.remove();
+            Intersections.prototype.insertLayout();
         });
 
-        dateSlider.noUiSlider.on('end', function() {
-
-            if(Intersections.prototype.sliderRangeChange){
-                Intersections.prototype.sliderRangeChange = false;
-                Intersections.prototype.current();
-                Intersections.prototype.remove();
-                Intersections.prototype.insertLayout();
-            }
-        });
     }
 
     // return void
     remove() {
-        for (let index in this.layer) {
-            this.layer[index].remove();
+
+        for (let index in geoJSONlayers) {
+            geoJSONlayers[index].remove();
         }
         $(".results .title").html("");
         $("#intersections-results").html("");
-        return 0;
     }
 
     // show authors

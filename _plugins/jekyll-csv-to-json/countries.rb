@@ -48,7 +48,7 @@ module CsvToJson
           index+=1
         end
       end
-      # save(site, 'countries', pretty_print(data.to_h.to_json))
+      save(site, 'countries', pretty_print(data.to_h.to_json))
     end
   end
 end
