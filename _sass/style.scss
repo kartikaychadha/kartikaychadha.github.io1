@@ -834,11 +834,8 @@ path.map {
   stroke-linejoin: miter;
 }
 
-.points_g {
-  cursor: pointer;
-}
 
-.points_g.focus_point .point {
+.leaflet-interactive.active {
   fill: $clr2;
   stroke: $clr2;
   stroke-width: 1;

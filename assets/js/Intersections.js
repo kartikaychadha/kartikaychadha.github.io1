@@ -17,6 +17,8 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 }).addTo(map);
 
 
+ 
+
 // Create a new date from a string, return as a timestamp.
 /**
  * @param string 
@@ -203,13 +205,12 @@ function currentIntersection() {
 
 var continentDataTarget = continentData;
 
+// var continentDataTarget = continentData;
 function InsertLayout() {
 
     function onEachFeature(feature, layer) {
 
-        layer.on('click', function(){
-            showAuthors(feature);
-        });
+
         var latlng = layer._latlng;
 
         // var d=  L.circle(latlng, 70000, {
@@ -239,72 +240,64 @@ function InsertLayout() {
         pointToLayer: function (feature, latlng) {
 
             var users = getIntersectionUsers(feature.properties.PlaceID);
-            var likes = getMaxLikelihood(users);
-
-            if(likes[3] != 0){
-                var layer3 =  L.circle(latlng, 100000, {
-                    radius: 8,
-                    fillColor: "#ff7800",
-                    color: "#000",
-                    weight: 1,
-                    opacity: 6,
-                    fillOpacity: 0.8,
-                    className: 'point_01 point',
-                });
-                geoJSONlayers[parseInt(3 + ""+ feature['id'])] = layer3;
-            }
-
-            if(likes[2] != 0){
-                var layer2 =  L.circle(latlng, 80000, {
-                    radius: 8,
-                    fillColor: "#ff7800",
-                    color: "#000",
-                    weight: 1,
-                    opacity: 3,
-                    fillOpacity: 0.8,
-                    className: 'point_02 point',
-                });
-                geoJSONlayers[parseInt(2 + ""+ feature['id'])] = layer2;
-            }
-
-            if(likes[1] != 0){
-                var layer1 =  L.circle(latlng, 50000, {
-                    radius: 8,
-                    fillColor: "#ff7800",
-                    color: "#000",
-                    weight: 1,
-                    opacity: 1,
-                    fillOpacity: 0.8
-                });
-                geoJSONlayers[parseInt(1 + ""+ feature['id'])] = layer1;
-            }
-
-            if(layer3 !== undefined){
-                return layer3;
-            }
-
-            if(layer2 !== undefined){
-                return layer2;
-            }
-
-            return layer1;
-            
-
-        },
-        filter: function(feature) {
-
-            var users = getIntersectionUsers(feature.properties.PlaceID);
-
-            // console.dir(users);
-
             if( Object.keys(users).length == 0){
                 return false;
             }
+            var likes = getMaxLikelihood(users);
 
-            // continentDataTarget.features[feature.id].users = users;
-        
-            return true;
-            
+            if(likes[3] != 0){
+                var layer3 =  L.circle(latlng, 50000, {
+                    radius: 8,
+                    className: "point_03"
+                });
+                geoJSONlayers[parseInt(3 + ""+ feature['id'])] = layer3;
+                layer3.on('click', function(e){
+
+                    $(e.target._path).parent().find(".focus_point").removeClass("focus_point");
+                    $(e.target._path).addClass("focus_point");
+
+                    showAuthors(feature);
+                });
+                layer3.addTo(map);
+            }
+
+            // $( "#mapid" ).on( "click", "path.leaflet-interactive", function() {
+            //     $(this).parent().find('.focus_point').removeClass('focus_point');
+            // });
+
+            if(likes[2] != 0){
+                var layer2 =  L.circle([latlng.lat, latlng.lng+.01], 70000, {
+                    radius: 8,
+                    className: "point_02"
+                });
+                geoJSONlayers[parseInt(2 + ""+ feature['id'])] = layer2;
+                layer2.on('click', function(e){
+
+                    $(e.target._path).parent().find(".active").removeClass("active");
+                    $(e.target._path).addClass("active");
+
+                    showAuthors(feature);
+                });
+                layer2.addTo(map);
+            }
+
+            if(likes[1] != 0){
+                var layer1 =  L.circleMarker([latlng.lat, latlng.lng +.02], 90000, {
+                    radius: 8,
+                    className: "point_01"
+                });
+                layer1.on('click', function(e){
+                    
+                    $(e.target._path).parent().find(".focus_point").removeClass("focus_point");
+                    $(e.target._path).addClass("focus_point");
+                    showAuthors(feature);
+                });
+                geoJSONlayers[parseInt(1 + ""+ feature['id'])] = layer1;
+                layer1.addTo(map);
+            }
+
+            return false;
+
         },
         onEachFeature: onEachFeature,
     }).addTo(map);
@@ -416,9 +409,6 @@ function getMaxLikelihood(users) {
                 break;
         }
     }
-
-    console.log(like);
-
     return like;
 }
 
@@ -426,4 +416,6 @@ function getMaxLikelihood(users) {
 $(".legend").on('click', function () {
     $(this).fadeOut(300);
 });
+
+
 
