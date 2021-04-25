@@ -200,14 +200,14 @@ function currentIntersection() {
     return targetIntersection;
 }
 
-// var continentDataTarget = continentData;
+var continentDataTarget = continentData;
 function InsertLayout() {
 
     L.geoJSON(continentData, {
 
         pointToLayer: function (feature, latlng) {
 
-            function increI(likelihood) {
+            function __i(likelihood) {
                 var base = 50000;
                 var increment = 10000 * likelihood;
 
@@ -221,7 +221,7 @@ function InsertLayout() {
             var likes = getMaxLikelihood(users);
 
             if(likes[3] != 0){
-                var layer3 =  L.circle(latlng, increI(likes[3]), {
+                var layer3 =  L.circle(latlng, __i(likes[3]), {
                     radius: 8,
                     className: "point_03"
                 });
@@ -236,7 +236,7 @@ function InsertLayout() {
             }
 
             if(likes[2] != 0){
-                var layer2 =  L.circle(latlng, increI(likes[2]), {
+                var layer2 =  L.circle(latlng, __i(likes[2]), {
                     radius: 8,
                     className: "point_02"
                 });
@@ -252,7 +252,7 @@ function InsertLayout() {
             }
 
             if(likes[1] != 0){
-                var layer1 =  L.circleMarker(latlng, increI(likes[1]), {
+                var layer1 =  L.circleMarker(latlng, __i(likes[1]), {
                     radius: 8,
                     className: "point_01"
                 });
@@ -315,7 +315,7 @@ function getIntersectionUsers(placeID){
     var i = 1;
     for (const d_key in data) {
 
-        if(i == 100){
+        if(i == 15){
             break;
         }
         for (const c_key in data[d_key]) {
@@ -331,23 +331,32 @@ function getIntersectionUsers(placeID){
                 var EndDate = data[d_key][c_key][a_key]['EndDate'];
                 StartDate = convertTimestampNumber(StartDate);
 
-                //without end date
-                if (StartDate > start_range || StartDate > end_range) {
-                    delete data[d_key][c_key][a_key];
+                if(StartDate == ""){
 
-                    if(EndDate != ""){
-                        EndDate = convertTimestampNumber(EndDate);
-    
-                    }
+                    if (StartDate > start_range ) {
+                    
+                        if(EndDate != ""){
+                            
+                            EndDate = convertTimestampNumber(EndDate);
+                        }
+                        delete data[d_key][c_key][a_key];
+                    }  
+
                 }
+
+                //without end date
+
+ 
+                
                 
             }
         }
-        i++;
+        
     }
-    console.log(data);
-    var data = intersectionData;
 
+    console.dir(data);
+
+    return ;
 
     var i = 0;
     for (const key in data) {
@@ -356,6 +365,9 @@ function getIntersectionUsers(placeID){
         var EndDate = convertTimestampNumber(data[key]['EndDate']);
         
 
+        users[i] = data[key];
+        i++;
+        continue;
         // compre start range 
         if(start_range > StartDate){
            // continue;
