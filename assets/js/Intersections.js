@@ -214,7 +214,7 @@ function InsertLayout() {
                 return base + increment;
             }
 
-            // var users = getIntersectionUsers(feature.properties.PlaceID);
+            var users = getIntersectionUsers(feature.properties.PlaceID);
             // console.log(users);
             // if( Object.keys(users).length == 0){
             //    // return false;
@@ -334,51 +334,44 @@ function getIntersectionUsers(placeID){
             
                 //declar valiable
                 var StartDate = data[d_key][c_key][a_key]['StartDate'];
-                var EndDate = data[d_key][c_key][a_key]['EndDate']
-
-                function startDateFailter(StartDate, EndDate) {
-
-                    var range = getCurrentRange(likeAsInt = true);
-                    var start_range = range[0];
-                    var end_range = range[1];
+                var EndDate = data[d_key][c_key][a_key]['EndDate'];
 
 
-                    if(StartDate == ""){
-                        if(EndDate == ""){
-                            return false;
-                        }
+                // start date and end date
+                if(StartDate != "" && EndDate != "" ){
                 
-                        EndDate = convertTimestampNumber(EndDate);
-                        if(EndDate > end_range){
-                            return false;
-                        }
-                        // 205 1990
-                        if(EndDate < start_range){
-                            return false;
-                        }
-
-                        
-                        console.log(start_range);
-                    }
-                     
-                    return true;
-                }
-                
-
-
-                if(startDateFailter(StartDate, EndDate) == false){
-                    delete data[d_key][c_key][a_key];
-                }
-
-
-
-                function endDateFailter(StartDate, EndDate) {
+                    StartDate = convertTimestampNumber(StartDate);
+                    EndDate = convertTimestampNumber(EndDate);
                     
-                }
+                    if(StartDate > EndDate){
+                        delete data[d_key][c_key][a_key];
+                    }
+                    // 205 1990
+                    if(EndDate < start_range){
+                        // return false;
+                    }
 
-                if(startDateFailter(StartDate, EndDate)  == false){
+                    
+                    // console.log(start_range);
+                }else{
                     delete data[d_key][c_key][a_key];
                 }
+                
+
+
+                // if(startDateFailter(StartDate, EndDate) == false){
+                //     delete data[d_key][c_key][a_key];
+                // }
+
+
+
+                // function endDateFailter(StartDate, EndDate) {
+                    
+                // }
+
+                // if(startDateFailter(StartDate, EndDate)  == false){
+                //     delete data[d_key][c_key][a_key];
+                // }
                 
                 
             }
