@@ -214,11 +214,17 @@ function InsertLayout() {
                 return base + increment;
             }
 
-            var users = getIntersectionUsers(feature.properties.PlaceID);
-            if( Object.keys(users).length == 0){
-                return false;
-            }
-            var likes = getMaxLikelihood(users);
+            // var users = getIntersectionUsers(feature.properties.PlaceID);
+            // console.log(users);
+            // if( Object.keys(users).length == 0){
+            //    // return false;
+            // }
+            // var likes = getMaxLikelihood(users);
+
+            return L.circle(latlng, 50000, {
+                radius: 8,
+                className: "point_03"
+            });
 
             if(likes[3] != 0){
                 var layer3 =  L.circle(latlng, __i(likes[3]), {
@@ -330,14 +336,12 @@ function getIntersectionUsers(placeID){
                 var StartDate = data[d_key][c_key][a_key]['StartDate'];
                 var EndDate = data[d_key][c_key][a_key]['EndDate']
 
-
-
                 function startDateFailter(StartDate, EndDate) {
 
                     var range = getCurrentRange(likeAsInt = true);
                     var start_range = range[0];
                     var end_range = range[1];
-                    
+
 
                     if(StartDate == ""){
                         if(EndDate == ""){
@@ -345,7 +349,16 @@ function getIntersectionUsers(placeID){
                         }
                 
                         EndDate = convertTimestampNumber(EndDate);
-                        console.log(EndDate);
+                        if(EndDate > end_range){
+                            return false;
+                        }
+                        // 205 1990
+                        if(EndDate < start_range){
+                            return false;
+                        }
+
+                        
+                        console.log(start_range);
                     }
                      
                     return true;
