@@ -328,25 +328,44 @@ function getIntersectionUsers(placeID){
             
                 //declar valiable
                 var StartDate = data[d_key][c_key][a_key]['StartDate'];
-                var EndDate = data[d_key][c_key][a_key]['EndDate'];
-                StartDate = convertTimestampNumber(StartDate);
+                var EndDate = data[d_key][c_key][a_key]['EndDate']
 
-                if(StartDate == ""){
 
-                    if (StartDate > start_range ) {
+
+                function startDateFailter(StartDate, EndDate) {
+
+                    var range = getCurrentRange(likeAsInt = true);
+                    var start_range = range[0];
+                    var end_range = range[1];
                     
-                        if(EndDate != ""){
-                            
-                            EndDate = convertTimestampNumber(EndDate);
-                        }
-                        delete data[d_key][c_key][a_key];
-                    }  
 
+                    if(StartDate == ""){
+                        if(EndDate == ""){
+                            return false;
+                        }
+                
+                        EndDate = convertTimestampNumber(EndDate);
+                        console.log(EndDate);
+                    }
+                     
+                    return true;
+                }
+                
+
+
+                if(startDateFailter(StartDate, EndDate) == false){
+                    delete data[d_key][c_key][a_key];
                 }
 
-                //without end date
 
- 
+
+                function endDateFailter(StartDate, EndDate) {
+                    
+                }
+
+                if(startDateFailter(StartDate, EndDate)  == false){
+                    delete data[d_key][c_key][a_key];
+                }
                 
                 
             }
