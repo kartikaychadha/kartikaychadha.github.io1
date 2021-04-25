@@ -315,34 +315,37 @@ function getIntersectionUsers(placeID){
     var i = 1;
     for (const d_key in data) {
 
-        if(i == 2){
+        if(i == 100){
             break;
         }
         for (const c_key in data[d_key]) {
+
+            if(c_key != placeID){
+                continue;
+            }
+
             for (const a_key in data[d_key][c_key]) {
-              
+            
                 //declar valiable
                 var StartDate = data[d_key][c_key][a_key]['StartDate'];
                 var EndDate = data[d_key][c_key][a_key]['EndDate'];
                 StartDate = convertTimestampNumber(StartDate);
-                EndDate = convertTimestampNumber(EndDate);
 
                 //without end date
-                if (StartDate < start_range || StartDate > end_range) {
+                if (StartDate > start_range || StartDate > end_range) {
                     delete data[d_key][c_key][a_key];
-                }
 
-                if(data[d_key][c_key][a_key]['EndDate'] != ""){
-                    
+                    if(EndDate != ""){
+                        EndDate = convertTimestampNumber(EndDate);
+    
+                    }
                 }
-
-                console.log( StartDate );
-               
-            
+                
             }
         }
         i++;
     }
+    console.log(data);
     var data = intersectionData;
 
 
