@@ -309,33 +309,41 @@ function getIntersectionUsers(placeID){
     var start_range = range[0];
     var end_range = range[1];
 
-
     var data = intersectionData;
 
-    // first target
-    for (let date in data) {
-        date = parseInt(date.replace('-', ''));
-        if(date < start_range || date < end_range){
-            delete data[date];
-        }
-    }
-
     //2nd target
+    var i = 1;
     for (const d_key in data) {
+
+        if(i == 2){
+            break;
+        }
         for (const c_key in data[d_key]) {
             for (const a_key in data[d_key][c_key]) {
+              
+                //declar valiable
                 var StartDate = data[d_key][c_key][a_key]['StartDate'];
                 var EndDate = data[d_key][c_key][a_key]['EndDate'];
                 StartDate = convertTimestampNumber(StartDate);
                 EndDate = convertTimestampNumber(EndDate);
 
+                //without end date
+                if (StartDate < start_range || StartDate > end_range) {
+                    delete data[d_key][c_key][a_key];
+                }
 
-                console.log(StartDate + " = " + EndDate);
-                return ;
+                if(data[d_key][c_key][a_key]['EndDate'] != ""){
+                    
+                }
+
+                console.log( StartDate );
+               
+            
             }
         }
+        i++;
     }
-    console.dir(data);
+    var data = intersectionData;
 
 
     var i = 0;
